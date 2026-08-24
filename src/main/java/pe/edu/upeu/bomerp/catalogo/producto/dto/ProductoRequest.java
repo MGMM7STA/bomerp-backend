@@ -24,4 +24,7 @@ public class ProductoRequest {
     @NotNull
     @PositiveOrZero
     private Integer stock;
+
+    @NotNull
+    private Long categoriaId;
 }
