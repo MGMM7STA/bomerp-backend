@@ -11,6 +11,8 @@ import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
 import pe.edu.upeu.bomerp.catalogo.producto.mapper.ProductoMapper;
 import pe.edu.upeu.bomerp.catalogo.producto.repository.ProductoRepository;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
+import pe.edu.upeu.bomerp.exception.StockInsuficienteException;
+
 import java.util.List;
 
 @Service
@@ -73,5 +75,18 @@ public class ProductoServiceImpl implements ProductoService {
     private Categoria buscarCategoriaOFallar(Long categoriaId) {
         return categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada: " + categoriaId));
+    }
+    
+    @Override
+    @Transactional
+    public void descontarStock(Long id, Integer cantidad) {
+        Producto producto = buscarOFallar(id);
+        if (producto.getStock() < cantidad) {
+            throw new StockInsuficienteException(
+                    "Stock insuficiente para " + producto.getNombre()
+                            + ": disponible " + producto.getStock() + ", solicitado " + cantidad);
+        }
+        producto.setStock(producto.getStock() - cantidad);
+        productoRepository.save(producto);
     }
 }
