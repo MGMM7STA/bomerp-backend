@@ -12,6 +12,7 @@ import pe.edu.upeu.bomerp.catalogo.producto.mapper.ProductoMapper;
 import pe.edu.upeu.bomerp.catalogo.producto.repository.ProductoRepository;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.exception.StockInsuficienteException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
