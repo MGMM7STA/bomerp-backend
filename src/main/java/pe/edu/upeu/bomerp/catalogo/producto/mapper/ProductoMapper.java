@@ -1,27 +1,20 @@
 package pe.edu.upeu.bomerp.catalogo.producto.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import pe.edu.upeu.bomerp.catalogo.categoria.entity.Categoria;
+import pe.edu.upeu.bomerp.catalogo.categoria.mapper.CategoriaMapper;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoRequest;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
 import pe.edu.upeu.bomerp.catalogo.producto.entity.Producto;
 
-@Component
-public class ProductoMapper {
+@Mapper(componentModel = "spring", uses = CategoriaMapper.class)
+public interface ProductoMapper {
 
-    public Producto toEntity(ProductoRequest request) {
-        Producto producto = new Producto();
-        producto.setNombre(request.getNombre());
-        producto.setPrecio(request.getPrecio());
-        producto.setStock(request.getStock());
-        return producto;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "nombre", source = "request.nombre")
+    @Mapping(target = "categoria", source = "categoria")
+    Producto toEntity(ProductoRequest request, Categoria categoria);
 
-    public ProductoResponse toResponse(Producto producto) {
-        return ProductoResponse.builder()
-                .id(producto.getId())
-                .nombre(producto.getNombre())
-                .precio(producto.getPrecio())
-                .stock(producto.getStock())
-                .build();
-    }
+    ProductoResponse toResponse(Producto producto);
 }

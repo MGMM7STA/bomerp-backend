@@ -35,3 +35,6 @@ build/
 ### BomERP · agregado 19/08/2026 ###
 logs/
 *.log
+
+### MkDocs · agregado 13/09/2026 ###
+site/

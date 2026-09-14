@@ -19,9 +19,12 @@ import java.util.List;
 public class ProductoController {
     private final ProductoService productoService;
 
-    @Operation(summary = "Lista los productos registrados")
+    @Operation(summary = "Lista los productos registrados, opcionalmente filtrados por categoria")
     @GetMapping
-    public ResponseEntity<List<ProductoResponse>> listar() {
+    public ResponseEntity<List<ProductoResponse>> listar(@RequestParam(required = false) Long categoriaId) {
+        if (categoriaId != null) {
+            return ResponseEntity.ok(productoService.listarPorCategoria(categoriaId));
+        }
         return ResponseEntity.ok(productoService.listar());
     }
 

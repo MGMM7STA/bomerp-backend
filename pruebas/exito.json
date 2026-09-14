@@ -1,0 +1,4 @@
+{ "estudianteId": 1, "detalles": [
+  { "habitoId": 1, "veces": 1, "descripcion": "Caminata al parque", "urlImagen": "https://drive.upeu/evi/001.jpg" },
+  { "habitoId": 2, "veces": 1, "descripcion": "Manzana en el desayuno", "urlImagen": "https://drive.upeu/evi/002.jpg" }
+] }
