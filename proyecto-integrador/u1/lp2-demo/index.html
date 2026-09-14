@@ -1,0 +1,1306 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Backend REST modular del proyecto Semestre Saludable UPeU - LP2 Unidad 1">
+      
+      
+        <meta name="author" content="Montalvo Machaca, Maykol Gabriel">
+      
+      
+      
+        <link rel="prev" href="../../..">
+      
+      
+        <link rel="next" href="../../../guia-ejecucion/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Producto Unidad 1 - Semestre Saludable UPeU - Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lp2-producto-de-unidad-1" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="Semestre Saludable UPeU - Backend" class="md-header__button md-logo" aria-label="Semestre Saludable UPeU - Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Semestre Saludable UPeU - Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Producto Unidad 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/MGMM7STA/bomerp-backend" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MGMM7STA/bomerp-backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Semestre Saludable UPeU - Backend" class="md-nav__button md-logo" aria-label="Semestre Saludable UPeU - Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Semestre Saludable UPeU - Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/MGMM7STA/bomerp-backend" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MGMM7STA/bomerp-backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Producto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-alcance-arquitectonico-del-corte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Alcance arquitectónico del corte
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-demo-ejecutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Demo ejecutable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-contrato-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Contrato REST
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Contrato REST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#codigos-de-estado-y-su-significado-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Códigos de estado y su significado de negocio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dto-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. DTO principales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-arquitectura-backend-u1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Arquitectura backend U1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-casos-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Casos de prueba
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-trazabilidad-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Trazabilidad con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-trazabilidad-y-procedencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Trazabilidad y procedencia
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guia-ejecucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guia de ejecucion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Producto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-alcance-arquitectonico-del-corte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Alcance arquitectónico del corte
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-demo-ejecutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Demo ejecutable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-contrato-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Contrato REST
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Contrato REST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#codigos-de-estado-y-su-significado-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Códigos de estado y su significado de negocio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dto-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. DTO principales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-arquitectura-backend-u1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Arquitectura backend U1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-casos-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Casos de prueba
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-trazabilidad-con-ads-y-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Trazabilidad con ADS y BD2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-trazabilidad-y-procedencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Trazabilidad y procedencia
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="lp2-producto-de-unidad-1">LP2 - Producto de Unidad 1<a class="headerlink" href="#lp2-producto-de-unidad-1" title="Permanent link">&para;</a></h1>
+<p><strong>Proyecto:</strong> Semestre Saludable UPeU
+<strong>Autor:</strong> Montalvo Machaca, Maykol Gabriel
+<strong>Curso:</strong> Lenguaje de Programación II — UPeU sede Juliaca — Sección g2 — Semestre 2026-2
+<strong>Repositorio:</strong> <a href="https://github.com/MGMM7STA">MGMM7STA/bomerp-backend</a></p>
+<h2 id="producto">Producto<a class="headerlink" href="#producto" title="Permanent link">&para;</a></h2>
+<p><strong>Backend REST modular ensamblado como una sola aplicación Spring Boot, conectado a Oracle 23ai, con persistencia ORM, CRUD, una operación cabecera–detalle transaccional, consultas con filtros y agregaciones, CORS por propiedad, logs correlacionados y pruebas automáticas.</strong></p>
+<p>El dominio es <strong>Semestre Saludable UPeU</strong>: una campaña institucional en la que el estudiante registra evidencias diarias de hábitos saludables (alimentación, descanso, actividad física, hidratación) y acumula puntaje. El backend se organiza como monolito modular con dos módulos propios:</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tipo</th>
+<th>Contenido en U1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>campanias</code></td>
+<td>No transaccional</td>
+<td>Catálogo maestro: categorías de hábito, hábitos y campañas con su cupo diario.</td>
+</tr>
+<tr>
+<td><code>participacion</code></td>
+<td>Transaccional</td>
+<td>Registro de participación con sus evidencias (cabecera–detalle), consumo de cupo y consultas.</td>
+</tr>
+</tbody>
+</table>
+<p>Los módulos <code>catalogo</code> y <code>ventas</code> son el ejemplo guiado que el docente desarrolló en las sesiones S1–S4; permanecen en el repositorio como referencia de aprendizaje y no forman parte del dominio de Semestre Saludable. La sustentación se realiza sobre <code>campanias</code> y <code>participacion</code>.</p>
+<p>La autenticación JWT y la entidad <code>Estudiante</code> no forman parte de U1: el módulo <code>seguridad</code> se implementa en S10, tal como establece el brief del proyecto y la decisión registrada en ADR-004. Por eso <code>estudianteId</code> viaja como identificador simple, sin tabla ni clave foránea propia en este corte.</p>
+<h2 id="1-alcance-arquitectonico-del-corte">1. Alcance arquitectónico del corte<a class="headerlink" href="#1-alcance-arquitectonico-del-corte" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bomerp-backend/                  # un solo proyecto Maven, sin reactor multi-modulo
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── src/main/java/pe/edu/upeu/bomerp/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── BomerpBackendApplication.java   # unico Spring Boot ejecutable
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── CorsConfig.java                 # CORS por propiedad externa
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ├── OpenApiConfig.java              # documentacion de API
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ├── filter/                         # CorrelationIdFilter (X-Trace-ID)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    ├── exception/                      # manejo global de errores
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    ├── campanias/                      # MODULO PROPIO - no transaccional
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    │   ├── categoriahabito/            # agregado raiz: CategoriaHabito
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    │   ├── habito/                     # agregado raiz: Habito
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    │   └── campania/                   # agregado raiz: Campania + CupoDiario
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ├── participacion/                  # MODULO PROPIO - transaccional
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    │   └── registro/                   # agregado raiz: RegistroParticipacion + DetalleEvidencia
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    ├── catalogo/                       # ejemplo guiado del docente (S1-S3)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    ├── ventas/                         # ejemplo guiado del docente (S4-S5)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    └── seguridad/                      # se implementa en S10 (aun no existe como paquete)
+</code></pre></div>
+<p>Cada paquete directo bajo <code>pe.edu.upeu.bomerp</code> es un <strong>módulo de aplicación</strong> de Spring Modulith, no un artefacto Maven separado. Dentro de cada módulo, cada subpaquete es un <strong>agregado</strong> con identidad y ciclo de vida propios, y dentro de cada agregado están las capas (<code>entity</code>, <code>dto</code>, <code>mapper</code>, <code>repository</code>, <code>service</code>, <code>controller</code>).</p>
+<p><code>DetalleEvidencia</code> no tiene paquete propio: vive dentro de <code>registro</code> porque no tiene ciclo de vida independiente — no se crea, consulta ni elimina sin su registro padre.</p>
+<p>Los límites no dependen de la disciplina del programador: están declarados con <code>@NamedInterface</code> sobre los paquetes <code>dto</code> y <code>service</code>, y verificados automáticamente por <code>ModularityTests</code>. Un módulo que intente usar el <code>repository</code> o la <code>entity</code> de otro rompe la compilación de las pruebas.</p>
+<h2 id="2-demo-ejecutable">2. Demo ejecutable<a class="headerlink" href="#2-demo-ejecutable" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>URL local</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Documentación interactiva de la API</td>
+<td><code>http://localhost:8080/swagger-ui.html</code></td>
+</tr>
+<tr>
+<td>Contrato OpenAPI en JSON</td>
+<td><code>http://localhost:8080/v3/api-docs</code></td>
+</tr>
+<tr>
+<td>Verificación de estado</td>
+<td><code>http://localhost:8080/actuator/health</code></td>
+</tr>
+<tr>
+<td>Página de prueba de CORS</td>
+<td><code>origen-prueba/index.html</code> (abierta con <code>file://</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-contrato-rest">3. Contrato REST<a class="headerlink" href="#3-contrato-rest" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 1. Contrato REST implementado</strong></p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Propósito</th>
+<th>Sesión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/categorias-habito</code></td>
+<td>Listar las categorías de hábito.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/categorias-habito/{id}</code></td>
+<td>Consultar una categoría.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/categorias-habito</code></td>
+<td>Registrar una categoría.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/v1/categorias-habito/{id}</code></td>
+<td>Actualizar una categoría.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/categorias-habito/{id}</code></td>
+<td>Eliminar una categoría sin hábitos asociados.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/habitos</code></td>
+<td>Listar hábitos con su categoría anidada.</td>
+<td>S3</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/habitos?categoriaId={id}</code></td>
+<td>Filtrar hábitos por categoría.</td>
+<td>S3</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/habitos/{id}</code></td>
+<td>Consultar un hábito con su categoría.</td>
+<td>S3</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/habitos</code></td>
+<td>Registrar un hábito validando que la categoría exista.</td>
+<td>S3</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/v1/habitos/{id}</code></td>
+<td>Actualizar un hábito y reasignar su categoría.</td>
+<td>S3</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/habitos/{id}</code></td>
+<td>Eliminar un hábito.</td>
+<td>S3</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/campanias</code></td>
+<td>Listar campañas.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/campanias/activa</code></td>
+<td>Devolver la campaña vigente con su cupo diario.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/campanias</code></td>
+<td>Registrar una campaña validando fechas y unicidad de campaña activa.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/v1/campanias/{id}</code></td>
+<td>Actualizar una campaña.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/campanias/{id}</code></td>
+<td>Eliminar una campaña sin participación registrada.</td>
+<td>S2</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/participacion/registros</code></td>
+<td>Registrar la participación diaria con sus evidencias, de forma atómica.</td>
+<td>S4</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/participacion/registros</code></td>
+<td>Consultar registros con cuatro filtros combinables y ordenamiento.</td>
+<td>S5</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/participacion/registros/resumen</code></td>
+<td>Devolver el reporte agregado con proyección resumida.</td>
+<td>S5</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/participacion/registros/{id}</code></td>
+<td>Consultar un registro con todas sus evidencias.</td>
+<td>S4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="codigos-de-estado-y-su-significado-de-negocio">Códigos de estado y su significado de negocio<a class="headerlink" href="#codigos-de-estado-y-su-significado-de-negocio" title="Permanent link">&para;</a></h3>
+<p><strong>Tabla 2. Respuestas de error implementadas</strong></p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Excepción</th>
+<th>Cuándo ocurre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td><code>MethodArgumentNotValidException</code></td>
+<td>El cuerpo enviado viola una validación de formato (<code>@NotBlank</code>, <code>@Positive</code>, <code>@Pattern</code>).</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td><code>IllegalArgumentException</code></td>
+<td>Se pide ordenar por un campo fuera de la lista blanca, o la fecha fin no es posterior a la de inicio.</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td><code>ResourceNotFoundException</code></td>
+<td>Se referencia un recurso inexistente (categoría, hábito, campaña o registro).</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td><code>ReferenciaEnUsoException</code></td>
+<td>Se intenta borrar una categoría con hábitos, una campaña con participación, o activar una segunda campaña.</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td><code>CupoDiarioExcedidoException</code></td>
+<td>El estudiante supera el máximo de evidencias diarias que permite la campaña.</td>
+</tr>
+</tbody>
+</table>
+<p>La distinción es deliberada: <code>400</code> significa <em>"lo que enviaste está mal escrito"</em>; <code>409</code> significa <em>"lo que enviaste está bien escrito, pero el estado actual del negocio no lo permite"</em>. Cada respuesta de error viaja con el mismo cuerpo (<code>error</code>, <code>message</code>, <code>timestamp</code>, <code>status</code>) y con la cabecera <code>X-Trace-ID</code> que la enlaza con la línea exacta del log.</p>
+<h2 id="4-dto-principales">4. DTO principales<a class="headerlink" href="#4-dto-principales" title="Permanent link">&para;</a></h2>
+<p>Cada recurso tiene un DTO de entrada distinto del de salida. No se reutiliza uno solo porque lo que el cliente <strong>puede enviar</strong> y lo que el servidor <strong>debe devolver</strong> no coinciden: el cliente nunca envía <code>id</code>, <code>fecha</code>, <code>estado</code>, <code>puntajeTotal</code> ni <code>subtotal</code> — todos esos los calcula el servidor. Reutilizar un DTO abriría la puerta a que un cliente se auto-asigne el puntaje.</p>
+<p><strong>Entrada de la operación cabecera–detalle</strong> — <code>POST /api/v1/participacion/registros</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"estudianteId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">"detalles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"habitoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"veces"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"descripcion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Caminata al campus"</span><span class="p">,</span><span class="w"> </span><span class="nt">"urlImagen"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ejemplo/img1.jpg"</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"habitoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"veces"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"descripcion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ensalada de frutas"</span><span class="p">,</span><span class="w"> </span><span class="nt">"urlImagen"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ejemplo/img2.jpg"</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Salida de la operación cabecera–detalle</strong> — <code>201 Created</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"estudianteId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"campaniaId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">"fecha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-13T21:40:12"</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">"estado"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ENVIADO"</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">"totalEvidencias"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">"puntajeTotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.00</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">"detalles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"habitoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombreHabito"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Caminata de 30 minutos"</span><span class="p">,</span><span class="w"> </span><span class="nt">"descripcion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Caminata al campus"</span><span class="p">,</span><span class="w"> </span><span class="nt">"urlImagen"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ejemplo/img1.jpg"</span><span class="p">,</span><span class="w"> </span><span class="nt">"puntajeUnitario"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.00</span><span class="p">,</span><span class="w"> </span><span class="nt">"veces"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"subtotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.00</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"habitoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombreHabito"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Consumo de frutas"</span><span class="p">,</span><span class="w"> </span><span class="nt">"descripcion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ensalada de frutas"</span><span class="p">,</span><span class="w"> </span><span class="nt">"urlImagen"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ejemplo/img2.jpg"</span><span class="p">,</span><span class="w"> </span><span class="nt">"puntajeUnitario"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.00</span><span class="p">,</span><span class="w"> </span><span class="nt">"veces"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"subtotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.00</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>nombreHabito</code> y <code>puntajeUnitario</code> se <strong>copian</strong> dentro del detalle en el momento del registro. No se leen del hábito al consultar. Si mañana el hábito cambia de nombre o de puntaje, los registros ya emitidos conservan el valor que tenían el día que ocurrieron. Es el mismo principio por el que una boleta guarda el precio del día de la venta.</p>
+<p><strong>Objeto relacionado</strong> — <code>GET /api/v1/habitos</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Caminata de 30 minutos"</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">"descripcion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Caminata continua de al menos 30 minutos"</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">"puntajeBase"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">"activo"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">"categoria"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Actividad fisica"</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">]</span>
+</code></pre></div>
+<p>La categoría viaja como <code>CategoriaHabitoResumen</code> — solo <code>id</code> y <code>nombre</code> — y no como la entidad completa. Eso corta la navegación en un nivel: el hábito muestra su categoría, pero la categoría no devuelve la lista de sus hábitos. Sin ese corte, serializar cualquiera de los dos entraría en un ciclo infinito.</p>
+<p><strong>Reporte agregado</strong> — <code>GET /api/v1/participacion/registros/resumen</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"agregado"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"totalRegistros"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">"evidenciasTotales"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">"puntajeTotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">27.00</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">"puntajePromedio"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.00</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">"registros"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="nt">"estudianteId"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"fecha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-12T08:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"estado"</span><span class="p">:</span><span class="w"> </span><span class="s2">"APROBADO"</span><span class="p">,</span><span class="w"> </span><span class="nt">"totalEvidencias"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"puntajeTotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.00</span><span class="p">,</span><span class="w"> </span><span class="nt">"cantidadDetalles"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>puntajePromedio</code> se calcula en Java, no en la consulta. JPQL devuelve siempre <code>Double</code> para <code>AVG</code>, y un promedio de puntajes debe ser exacto: se calcula con <code>BigDecimal</code> y <code>RoundingMode.HALF_UP</code>.</p>
+<h2 id="5-arquitectura-backend-u1">5. Arquitectura backend U1<a class="headerlink" href="#5-arquitectura-backend-u1" title="Permanent link">&para;</a></h2>
+<p><strong>Figura 1. Módulos, esquemas y dependencias</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    APP[BomerpBackendApplication&lt;br/&gt;unico ejecutable]
+
+    subgraph CAMP[campanias - no transaccional]
+        CH[categoriahabito]
+        HAB[habito]
+        CAM[campania + cupodiario]
+    end
+
+    subgraph PART[participacion - transaccional]
+        REG[registro&lt;br/&gt;RegistroParticipacion + DetalleEvidencia]
+    end
+
+    SEG["seguridad&lt;br/&gt;(S10 - aun no existe)"]
+
+    SCAMP[(BOM_CAMPANIAS)]
+    SPART[(BOM_PARTICIPACION)]
+
+    APP --&gt; CAMP
+    APP --&gt; PART
+    APP -. se agrega en S10 .-&gt; SEG
+    HAB --&gt;|servicio publico| CH
+    REG --&gt;|servicio publico| HAB
+    REG --&gt;|servicio publico| CAM
+    CAMP --&gt; SCAMP
+    PART --&gt; SPART</code></pre>
+<p>Todos los módulos corren en la misma JVM y comparten un solo datasource. No existe Feign ni comunicación HTTP interna. <code>participacion</code> llama a <code>campanias</code> a través de sus interfaces <code>HabitoService</code> y <code>CampaniaService</code> — nunca a sus repositorios ni a sus entidades.</p>
+<p><strong>Figura 2. Recorrido de una petición</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    CLI[Cliente: navegador, curl o Swagger] --&gt; FIL[CorrelationIdFilter&lt;br/&gt;genera X-Trace-ID]
+    FIL --&gt; CTR[Controller&lt;br/&gt;recibe DTO, valida con @Valid]
+    CTR --&gt; SRV[Service&lt;br/&gt;regla de negocio y @Transactional]
+    SRV --&gt; MAP[Mapper MapStruct&lt;br/&gt;DTO a entidad y viceversa]
+    SRV --&gt; REP[Repository&lt;br/&gt;Spring Data JPA]
+    REP --&gt; ORM[Hibernate ORM]
+    ORM --&gt; BD[(Oracle 23ai)]
+    SRV -. si lanza excepcion .-&gt; GEH[GlobalExceptionHandler&lt;br/&gt;traduce a 400, 404 o 409]
+    GEH --&gt; CLI</code></pre>
+<p>El controller no sabe consultar la base de datos y el repositorio no sabe de reglas de negocio. Esa separación es la que permite cambiar Oracle por otro motor tocando una sola capa.</p>
+<h2 id="6-casos-de-prueba">6. Casos de prueba<a class="headerlink" href="#6-casos-de-prueba" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 3. Casos verificados en vivo</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>Caso</th>
+<th>Acción</th>
+<th>Resultado obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>Backend operativo</td>
+<td>Arrancar con el perfil <code>dev</code>.</td>
+<td>Conecta con Oracle 23ai (<code>FREEPDB1</code>) y arranca sin errores.</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>Límites de módulos</td>
+<td><code>mvnw test</code> → <code>ModularityTests</code>.</td>
+<td>2 pruebas en verde: ningún módulo accede al repositorio de otro.</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>Validación de esquema</td>
+<td><code>ddl-auto: validate</code> al arrancar.</td>
+<td>La aplicación se niega a arrancar si una entidad no tiene su tabla real en Oracle.</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>CRUD — crear</td>
+<td><code>POST /categorias-habito</code> con datos válidos.</td>
+<td><code>201 Created</code> con el <code>id</code> asignado.</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>CRUD — listar</td>
+<td><code>GET /categorias-habito</code>.</td>
+<td>Las 4 categorías del catálogo.</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>CRUD — eliminar libre</td>
+<td><code>DELETE /categorias-habito/5</code> (sin hábitos).</td>
+<td><code>204 No Content</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>CRUD — eliminar bloqueado</td>
+<td><code>DELETE /categorias-habito/1</code> (con hábitos).</td>
+<td><code>409 Conflict</code>: <em>"No se puede eliminar la categoría 'Alimentacion': tiene 1 habito(s) asociado(s)"</em>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Objeto relacionado</td>
+<td><code>GET /habitos</code>.</td>
+<td>Cada hábito con su categoría anidada, sin ciclo de serialización.</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>Filtro por relación</td>
+<td><code>GET /habitos?categoriaId=1</code>.</td>
+<td>Solo el hábito de esa categoría.</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>Referencia inválida</td>
+<td><code>POST /habitos</code> con <code>categoriaId: 999</code>.</td>
+<td><code>404 Not Found</code>: <em>"Categoria de habito no encontrada: 999"</em>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>Cabecera–detalle éxito</td>
+<td><code>POST /participacion/registros</code> con dos evidencias.</td>
+<td><code>201 Created</code>: cabecera, detalles, subtotales y puntaje total consistentes.</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>Cabecera–detalle rollback</td>
+<td><code>POST</code> que excede el cupo diario de la campaña.</td>
+<td><code>409 Conflict</code> y <strong>cero</strong> filas persistidas: ni cabecera, ni detalles, ni consumo de cupo.</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>Filtros combinados</td>
+<td><code>GET /participacion/registros?estado=APROBADO&amp;estudianteId=1&amp;desde=...&amp;hasta=...</code>.</td>
+<td>Solo los registros que cumplen los cuatro criterios a la vez.</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>Ordenamiento inválido</td>
+<td><code>GET /participacion/registros?ordenarPor=cantidadDetalles</code>.</td>
+<td><code>400 Bad Request</code> con el mensaje de la lista blanca, sin filtrar detalles internos.</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>Reporte agregado</td>
+<td><code>GET /participacion/registros/resumen</code>.</td>
+<td>Totales, promedio calculado en <code>BigDecimal</code> y proyección resumida.</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td>CORS bloqueado</td>
+<td>Página <code>file://</code> contra la API desde Chrome.</td>
+<td>El navegador bloquea la respuesta: el origen no está en la lista.</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td>CORS permitido</td>
+<td>Misma página desde un origen autorizado por propiedad.</td>
+<td>La respuesta se entrega al JavaScript de la página.</td>
+</tr>
+</tbody>
+</table>
+<p>El caso 12 es el que demuestra atomicidad. <code>@Transactional</code> sobre <code>crear()</code> hace que el fallo en la evidencia número dos revierta también la cabecera y la primera evidencia, aunque ya estuvieran escritas en la sesión de Hibernate. Sin esa anotación quedaría un registro a medias, con puntaje cobrado y evidencia faltante.</p>
+<p>El caso 16 es el que demuestra que CORS es una restricción <strong>del navegador</strong>, no del servidor: la misma petición hecha con <code>curl</code> devuelve <code>200</code> y los datos completos, porque <code>curl</code> no aplica la política de mismo origen. El servidor siempre ejecuta la petición; lo que hace CORS es decirle al navegador si tiene permiso de <strong>entregar</strong> la respuesta al JavaScript que la pidió.</p>
+<h2 id="7-trazabilidad-con-ads-y-bd2">7. Trazabilidad con ADS y BD2<a class="headerlink" href="#7-trazabilidad-con-ads-y-bd2" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 4. Trazabilidad entre los tres cursos</strong></p>
+<table>
+<thead>
+<tr>
+<th>Elemento LP2</th>
+<th>ADS</th>
+<th>BD2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Un solo ejecutable con configuración externa por perfil (<code>dev</code>)</td>
+<td>Vista de despliegue: un contenedor de aplicación y uno de base de datos</td>
+<td>Credenciales fuera del código, Oracle 23ai en Docker</td>
+</tr>
+<tr>
+<td>Monolito modular <code>campanias</code> / <code>participacion</code> con límites verificados</td>
+<td>Vista C3 de componentes: contenedor Backend API y sus componentes internos</td>
+<td>Esquemas <code>BOM_CAMPANIAS</code> y <code>BOM_PARTICIPACION</code> con propiedad funcional separada</td>
+</tr>
+<tr>
+<td>Relación <code>Habito</code> → <code>CategoriaHabito</code> con DTO resumido</td>
+<td>Modelo de dominio: entidad Hábito clasificada por categoría</td>
+<td><code>FK_HABITO_CATEGORIA</code>, <code>ID_CATEGORIA NOT NULL</code>, <code>UK_CATEGORIA_HABITO_NOMBRE</code></td>
+</tr>
+<tr>
+<td>Operación cabecera–detalle atómica del registro de participación</td>
+<td>Requisito funcional: el estudiante registra sus evidencias diarias</td>
+<td><code>REGISTROS</code> / <code>DETALLE_EVIDENCIAS</code> con FK e integridad referencial</td>
+</tr>
+<tr>
+<td>Cupo diario por estudiante y campaña</td>
+<td>Requisito no funcional: control de abuso del registro</td>
+<td><code>CUPOS_DIARIOS</code> con clave única por campaña, estudiante y fecha</td>
+</tr>
+<tr>
+<td>Filtros por estado y rango de fecha</td>
+<td>Requisito no funcional de rendimiento en consultas</td>
+<td>Índice sobre <code>FECHA</code> en <code>REGISTROS</code></td>
+</tr>
+<tr>
+<td><code>409</code> al borrar una categoría en uso</td>
+<td>Regla de integridad del modelo de dominio</td>
+<td>La FK de Oracle impide el borrado; el backend lo traduce a un mensaje de negocio</td>
+</tr>
+</tbody>
+</table>
+<p>La última fila es la que conviene explicar en vivo: la base de datos ya impide el borrado por sí sola, pero devolvería un <code>ORA-02292</code> que ningún usuario entiende. El backend consulta primero, detecta la condición y responde con una frase que dice qué pasó y qué hacer. La integridad se defiende en las dos capas, no en una sola.</p>
+<h2 id="8-rubrica-de-evaluacion">8. Rúbrica de evaluación<a class="headerlink" href="#8-rubrica-de-evaluacion" title="Permanent link">&para;</a></h2>
+<p><strong>Tabla 5. Rúbrica de la Unidad 1 y evidencia presentada</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Peso</th>
+<th>Evidencia en este proyecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Proyecto backend con ORM, conexión, recurso REST, DTO y documentación de API</td>
+<td style="text-align: right;">16%</td>
+<td>Proyecto Maven único, Spring Boot 4.0.7 sobre Java 21, Hibernate contra Oracle 23ai, <code>swagger-ui.html</code> y <code>/v3/api-docs</code> vivos, versionado <code>/api/v1</code>.</td>
+</tr>
+<tr>
+<td>2. CRUD REST completo con validaciones, excepciones, logs y pruebas</td>
+<td style="text-align: right;">16%</td>
+<td>CRUD de <code>categorias-habito</code> y <code>habitos</code> (casos 4–7, 10), <code>GlobalExceptionHandler</code> con 5 traducciones, <code>X-Trace-ID</code> en cada respuesta, 7 pruebas en verde.</td>
+</tr>
+<tr>
+<td>3. Objetos relacionados mediante ORM, DTO y reglas de asociación</td>
+<td style="text-align: right;">16%</td>
+<td><code>Habito</code> → <code>CategoriaHabito</code> con <code>@ManyToOne</code>, DTO resumido que corta el ciclo, filtro por relación y <code>409</code> al borrar una categoría en uso (casos 7–10).</td>
+</tr>
+<tr>
+<td>4. Operación cabecera-detalle con registro atómico, cálculos, estados, commit y rollback</td>
+<td style="text-align: right;">16%</td>
+<td><code>POST /participacion/registros</code> con cálculo de subtotales y puntaje, estado <code>ENVIADO</code>, y rollback completo por cupo excedido (casos 11–12).</td>
+</tr>
+<tr>
+<td>5. Consultas, filtros, ordenamiento, agregaciones, reportes y CORS</td>
+<td style="text-align: right;">16%</td>
+<td>Cuatro filtros combinables con <code>(:param IS NULL OR ...)</code>, orden con lista blanca, proyección por constructor, reporte agregado y CORS por propiedad externa (casos 13–17).</td>
+</tr>
+<tr>
+<td>6. Sustentación</td>
+<td style="text-align: right;">20%</td>
+<td>Presentación de 8 min, demo en vivo de 5 min y respuestas individuales.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-trazabilidad-y-procedencia">9. Trazabilidad y procedencia<a class="headerlink" href="#9-trazabilidad-y-procedencia" title="Permanent link">&para;</a></h2>
+<p>Los cinco primeros criterios son cita literal del resultado de aprendizaje de la Unidad I del sílabo de LP2 y corresponden a la porción de backend REST del <strong>Nivel 2 de CE023 (Programación)</strong>. La otra porción de ese nivel — frontend SPA, seguridad JWT e integración full-stack — se completa en la Unidad 2. El criterio 6 corresponde a la sustentación exigida por el sílabo (sesión 6, actividad 2) y verifica competencia general, no CE023.</p>
+<p><strong>Alcance declarado como pendiente.</strong> Tres reglas del módulo <code>participacion</code> quedan documentadas y no implementadas en este corte: rechazo de hábito duplicado dentro del mismo registro, recálculo del puntaje al rechazar un registro, y validación de evidencias fuera del rango de fechas de la campaña. La entidad <code>Estudiante</code> y el módulo <code>seguridad</code> están diferidos a S10 por decisión del brief y de ADR-004, no por omisión. Se declaran aquí porque la honestidad sobre el alcance forma parte de lo que se sustenta.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
