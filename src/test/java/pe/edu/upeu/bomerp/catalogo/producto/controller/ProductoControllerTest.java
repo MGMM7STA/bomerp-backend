@@ -49,6 +49,7 @@ class ProductoControllerTest {
         request.setNombre("Teclado mec\u00e1nico");
         request.setPrecio(new BigDecimal("180.50"));
         request.setStock(25);
+        request.setCategoriaId(1L);
 
         when(productoService.crear(any())).thenReturn(
                 ProductoResponse.builder().id(1L).nombre("Teclado mec\u00e1nico").precio(new BigDecimal("180.50")).stock(25).build()
