@@ -13,53 +13,48 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+    private Map<String, Object> cuerpo(HttpStatus status, String error, String mensaje) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Not Found");
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        body.put("status", status.value());
+        body.put("error", error);
+        body.put("message", mensaje);
+        return body;
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(cuerpo(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
-        body.put("message", "Error de validacion en los datos enviados");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
-
-    @ExceptionHandler(StockInsuficienteException.class)
-    public ResponseEntity<Map<String, Object>> handleStockInsuficiente(StockInsuficienteException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.CONFLICT.value());
-        body.put("error", "Conflict");
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
-    }
-
-    @ExceptionHandler(CupoDiarioExcedidoException.class)
-    public ResponseEntity<Map<String, Object>> handleCupoDiarioExcedido(CupoDiarioExcedidoException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.CONFLICT.value());
-        body.put("error", "Conflict");
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(cuerpo(HttpStatus.BAD_REQUEST, "Bad Request", "Error de validacion en los datos enviados"));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(cuerpo(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage()));
+    }
+
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<Map<String, Object>> handleStockInsuficiente(StockInsuficienteException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CupoDiarioExcedidoException.class)
+    public ResponseEntity<Map<String, Object>> handleCupoDiarioExcedido(CupoDiarioExcedidoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ReferenciaEnUsoException.class)
+    public ResponseEntity<Map<String, Object>> handleReferenciaEnUso(ReferenciaEnUsoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
     }
 }

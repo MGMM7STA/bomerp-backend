@@ -6,5 +6,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface CupoDiarioRepository extends JpaRepository<CupoDiario, Long> {
+
     Optional<CupoDiario> findByCampaniaIdAndEstudianteIdAndFecha(Long campaniaId, Long estudianteId, LocalDate fecha);
+
+    long countByCampaniaId(Long campaniaId);
 }

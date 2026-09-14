@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pe.edu.upeu.bomerp.campanias.categoriahabito.dto.CategoriaHabitoResumen;
 import java.math.BigDecimal;
 
 @Getter
@@ -18,4 +19,5 @@ public class HabitoResponse {
     private String descripcion;
     private BigDecimal puntajeBase;
     private Integer activo;
+    private CategoriaHabitoResumen categoria;
 }
