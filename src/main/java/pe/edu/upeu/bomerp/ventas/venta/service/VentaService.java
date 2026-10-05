@@ -13,4 +13,5 @@ public interface VentaService {
     VentaResponse obtener(Long id);
     VentaResponse crear(VentaRequest request);
     VentaReporte reporte(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta);
+    VentaResponse anular(Long id);
 }

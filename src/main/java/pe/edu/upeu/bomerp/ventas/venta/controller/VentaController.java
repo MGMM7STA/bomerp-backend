@@ -59,4 +59,9 @@ public class VentaController {
     public VentaResponse crear(@Valid @RequestBody VentaRequest request) {
         return ventaService.crear(request);
     }
+        @Operation(summary = "Anula una venta registrada, restaurando el stock de sus productos")
+    @PatchMapping("/{id}/anular")
+    public ResponseEntity<VentaResponse> anular(@PathVariable Long id) {
+        return ResponseEntity.ok(ventaService.anular(id));
+    }
 }

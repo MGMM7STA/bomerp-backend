@@ -12,4 +12,5 @@ public interface ProductoService {
     void eliminar(Long id);
     List<ProductoResponse> listarPorCategoria(Long categoriaId);
     void descontarStock(Long id, Integer cantidad);
+    void restaurarStock(Long id, Integer cantidad);
 }

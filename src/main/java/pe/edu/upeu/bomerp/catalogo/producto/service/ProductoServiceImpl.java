@@ -90,4 +90,11 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setStock(producto.getStock() - cantidad);
         productoRepository.save(producto);
     }
+    @Override
+    @Transactional
+    public void restaurarStock(Long id, Integer cantidad) {
+        Producto producto = buscarOFallar(id);
+        producto.setStock(producto.getStock() + cantidad);
+        productoRepository.save(producto);
+    }
 }

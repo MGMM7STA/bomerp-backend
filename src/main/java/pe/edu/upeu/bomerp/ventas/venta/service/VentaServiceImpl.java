@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
 import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
+import pe.edu.upeu.bomerp.exception.VentaYaAnuladaException;
 import pe.edu.upeu.bomerp.ventas.venta.dto.DetalleVentaRequest;
 import pe.edu.upeu.bomerp.ventas.venta.dto.VentaAgregado;
 import pe.edu.upeu.bomerp.ventas.venta.dto.VentaReporte;
@@ -75,5 +76,19 @@ public class VentaServiceImpl implements VentaService {
         Sort sort = Sort.by(Sort.Direction.DESC, "fecha");
         List<VentaResumen> ventas = ventaRepository.buscarResumen(estado, desde, hasta, sort);
         return new VentaReporte(agregado, ventas);
+    }
+    @Override
+    @Transactional
+    public VentaResponse anular(Long id) {
+        Venta venta = ventaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
+        if (venta.getEstado() != EstadoVenta.REGISTRADA) {
+            throw new VentaYaAnuladaException("La venta " + id + " ya está anulada");
+        }
+        for (DetalleVenta detalle : venta.getDetalles()) {
+            productoService.restaurarStock(detalle.getProductoId(), detalle.getCantidad());
+        }
+        venta.setEstado(EstadoVenta.ANULADA);
+        return ventaMapper.toResponse(ventaRepository.save(venta));
     }
 }
