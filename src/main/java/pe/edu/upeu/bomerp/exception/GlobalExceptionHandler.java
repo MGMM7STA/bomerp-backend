@@ -66,4 +66,10 @@ public class GlobalExceptionHandler {
         body.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
+
+    @ExceptionHandler(RegistroYaAnuladoException.class)
+    public ResponseEntity<Map<String, Object>> handleRegistroYaAnulado(RegistroYaAnuladoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
+    }
 }

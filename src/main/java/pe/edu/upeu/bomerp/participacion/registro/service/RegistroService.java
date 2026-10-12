@@ -21,4 +21,6 @@ public interface RegistroService {
     RegistroResponse obtener(Long id);
 
     RegistroResponse crear(RegistroRequest request);
+
+    RegistroResponse anular(Long id);
 }

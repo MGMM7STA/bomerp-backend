@@ -8,6 +8,7 @@ import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.service.CampaniaService;
 import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
 import pe.edu.upeu.bomerp.campanias.habito.service.HabitoService;
+import pe.edu.upeu.bomerp.exception.RegistroYaAnuladoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.participacion.registro.dto.DetalleEvidenciaRequest;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroAgregado;
@@ -105,6 +106,29 @@ public class RegistroServiceImpl implements RegistroService {
         registro.setPuntajeTotal(puntajeTotal);
         registro.setTotalEvidencias(totalEvidencias);
 
+        return registroMapper.toResponse(registroRepository.save(registro));
+    }
+
+    @Override
+    @Transactional
+    public RegistroResponse anular(Long id) {
+        RegistroParticipacion registro = registroRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Registro no encontrado: " + id));
+
+        if (registro.getEstado() == EstadoRegistro.ANULADO) {
+            throw new RegistroYaAnuladoException("El registro " + id + " ya esta anulado");
+        }
+
+        LocalDate fechaRegistro = registro.getFecha().toLocalDate();
+        for (DetalleEvidencia detalle : registro.getDetalles()) {
+            campaniaService.devolverCupo(
+                    registro.getCampaniaId(),
+                    registro.getEstudianteId(),
+                    fechaRegistro,
+                    detalle.getVeces());
+        }
+
+        registro.setEstado(EstadoRegistro.ANULADO);
         return registroMapper.toResponse(registroRepository.save(registro));
     }
 

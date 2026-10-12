@@ -137,4 +137,20 @@ public class CampaniaServiceImpl implements CampaniaService {
         return campaniaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Campania no encontrada: " + id));
     }
+
+    @Override
+    @Transactional
+    public void devolverCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces) {
+        CupoDiario cupo = cupoDiarioRepository
+                .findByCampaniaIdAndEstudianteIdAndFecha(campaniaId, estudianteId, fecha)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No existe cupo diario registrado para la campania " + campaniaId
+                                + ", estudiante " + estudianteId + " y fecha " + fecha));
+
+        int usadas = Math.max(0, cupo.getEvidenciasUsadas() - veces);
+        log.info("Devolviendo cupo campania={} estudiante={} fecha={} veces={} usadas={} -> {}",
+                campaniaId, estudianteId, fecha, veces, cupo.getEvidenciasUsadas(), usadas);
+        cupo.setEvidenciasUsadas(usadas);
+        cupoDiarioRepository.save(cupo);
+    }
 }

@@ -20,4 +20,6 @@ public interface CampaniaService {
     void eliminar(Long id);
 
     void consumirCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces);
+
+    void devolverCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces);
 }

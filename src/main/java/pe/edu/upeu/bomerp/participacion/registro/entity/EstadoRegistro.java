@@ -4,5 +4,6 @@ public enum EstadoRegistro {
     BORRADOR,
     ENVIADO,
     VALIDADO,
-    RECHAZADO
+    RECHAZADO,
+    ANULADO
 }

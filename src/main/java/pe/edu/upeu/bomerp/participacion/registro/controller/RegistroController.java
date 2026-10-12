@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,5 +70,12 @@ public class RegistroController {
     @ResponseStatus(HttpStatus.CREATED)
     public RegistroResponse crear(@Valid @RequestBody RegistroRequest request) {
         return registroService.crear(request);
+    }
+
+    @Operation(summary = "Anula un registro y devuelve el cupo diario consumido por sus evidencias")
+    @PatchMapping("/{id}/anular")
+    public ResponseEntity<RegistroResponse> anular(@PathVariable Long id) {
+        log.info("Anulando registro id={}", id);
+        return ResponseEntity.ok(registroService.anular(id));
     }
 }
