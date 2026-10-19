@@ -72,4 +72,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
     }
+    
+    @ExceptionHandler(AccesoDenegadoException.class)
+    public ResponseEntity<Map<String, Object>> handleAccesoDenegado(AccesoDenegadoException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(cuerpo(HttpStatus.FORBIDDEN, "Forbidden", ex.getMessage()));
+    }
 }

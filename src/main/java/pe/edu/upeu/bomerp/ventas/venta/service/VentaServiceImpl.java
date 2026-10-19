@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upeu.bomerp.catalogo.producto.dto.ProductoResponse;
 import pe.edu.upeu.bomerp.catalogo.producto.service.ProductoService;
+import pe.edu.upeu.bomerp.exception.AccesoDenegadoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.exception.VentaYaAnuladaException;
 import pe.edu.upeu.bomerp.ventas.venta.dto.DetalleVentaRequest;
@@ -33,26 +34,31 @@ public class VentaServiceImpl implements VentaService {
     @Override
     @Transactional(readOnly = true)
     public List<VentaResponse> buscar(EstadoVenta estado, LocalDateTime desde, LocalDateTime hasta,
-                                       String ordenarPor, String direccion) {
+                                       String ordenarPor, String direccion, String vendedorId) {
         Sort.Direction dir = "ASC".equalsIgnoreCase(direccion) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(dir, ordenarPor);
-        return ventaRepository.buscar(estado, desde, hasta, sort).stream().map(ventaMapper::toResponse).toList();
+        return ventaRepository.buscar(estado, desde, hasta, vendedorId, sort).stream()
+                .map(ventaMapper::toResponse).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public VentaResponse obtener(Long id) {
+    public VentaResponse obtener(Long id, String vendedorId) {
         Venta venta = ventaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
+        if (vendedorId != null && !vendedorId.equals(venta.getVendedorId())) {
+            throw new AccesoDenegadoException("No tienes acceso a esta venta");
+        }
         return ventaMapper.toResponse(venta);
     }
 
     @Override
     @Transactional
-    public VentaResponse crear(VentaRequest request) {
+    public VentaResponse crear(VentaRequest request, String vendedorId) {
         Venta venta = new Venta();
         venta.setFecha(LocalDateTime.now());
         venta.setEstado(EstadoVenta.REGISTRADA);
+        venta.setVendedorId(vendedorId);
 
         BigDecimal total = BigDecimal.ZERO;
         for (DetalleVentaRequest detalleRequest : request.getDetalles()) {
@@ -77,6 +83,7 @@ public class VentaServiceImpl implements VentaService {
         List<VentaResumen> ventas = ventaRepository.buscarResumen(estado, desde, hasta, sort);
         return new VentaReporte(agregado, ventas);
     }
+
     @Override
     @Transactional
     public VentaResponse anular(Long id) {

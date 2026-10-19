@@ -39,6 +39,9 @@ public class Venta {
     @Column(name = "TOTAL", nullable = false, precision = 12, scale = 2)
     private BigDecimal total;
 
+    @Column(name = "VENDEDOR_ID", length = 36)
+    private String vendedorId;
+
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleVenta> detalles = new ArrayList<>();
 }
