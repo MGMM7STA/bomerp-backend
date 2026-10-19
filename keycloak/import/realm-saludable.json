@@ -1,0 +1,62 @@
+{
+  "realm": "saludable",
+  "displayName": "Semestre Saludable UPeU",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "accessTokenLifespan": 1800,
+  "roles": {
+    "realm": [
+      { "name": "ESTUDIANTE", "description": "Registra su propia participacion diaria" },
+      { "name": "COORDINADOR", "description": "Administra habitos, categorias y campanias" },
+      { "name": "ADMIN", "description": "Administracion total del sistema" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "saludable-frontend",
+      "name": "Semestre Saludable SPA",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": ["http://localhost:4200/*"],
+      "webOrigins": ["http://localhost:4200"]
+    }
+  ],
+  "users": [
+    {
+      "username": "estudiante1",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "estudiante1@upeu.edu.pe",
+      "firstName": "Deysi",
+      "lastName": "Cruz Mendoza",
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["ESTUDIANTE"]
+    },
+    {
+      "username": "coordinador1",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "coordinador1@upeu.edu.pe",
+      "firstName": "Maykol",
+      "lastName": "Montalvo Machaca",
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["COORDINADOR"]
+    },
+    {
+      "username": "admin1",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin1@upeu.edu.pe",
+      "firstName": "Administrador",
+      "lastName": "Semestre Saludable",
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["ADMIN"]
+    }
+  ]
+}

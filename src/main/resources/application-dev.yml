@@ -20,6 +20,11 @@ spring:
       enabled: true
     livereload:
       enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:38080/realms/saludable
 
 springdoc:
   swagger-ui:
