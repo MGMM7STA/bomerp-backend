@@ -33,6 +33,8 @@ public class SecurityConfig {
             "/api/v1/campanias/**"
     };
 
+    private static final String RUTA_REGISTROS = "/api/v1/participacion/registros";
+
     @Value("${bomerp.cors.allowed-origins}")
     private String origenesPermitidos;
 
@@ -47,6 +49,10 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers(HttpMethod.GET, RUTAS_CAMPANIAS).authenticated()
                         .requestMatchers(RUTAS_CAMPANIAS).hasAnyRole("COORDINADOR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/resumen").hasAnyRole("COORDINADOR", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, RUTA_REGISTROS + "/*/anular").hasAnyRole("COORDINADOR", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, RUTA_REGISTROS).hasAnyRole("ESTUDIANTE", "COORDINADOR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/**").authenticated()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(convertidorDeRoles())));
