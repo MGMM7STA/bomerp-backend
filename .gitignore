@@ -38,3 +38,5 @@ logs/
 
 ### MkDocs · agregado 13/09/2026 ###
 site/
+
+.env
