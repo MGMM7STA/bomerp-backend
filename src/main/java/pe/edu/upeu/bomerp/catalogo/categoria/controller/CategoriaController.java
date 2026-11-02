@@ -11,7 +11,8 @@ import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaRequest;
 import pe.edu.upeu.bomerp.catalogo.categoria.dto.CategoriaResponse;
 import pe.edu.upeu.bomerp.catalogo.categoria.service.CategoriaService;
 import java.util.List;
-
+import org.springframework.http.CacheControl;
+import java.time.Duration;
 @Tag(name = "Categorías")
 @RestController
 @RequestMapping("/api/v1/categorias")
@@ -22,7 +23,9 @@ public class CategoriaController {
     @Operation(summary = "Lista las categorías registradas")
     @GetMapping
     public ResponseEntity<List<CategoriaResponse>> listar() {
-        return ResponseEntity.ok(categoriaService.listar());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(Duration.ofMinutes(5)))
+                .body(categoriaService.listar());
     }
 
     @Operation(summary = "Consulta una categoría por id")

@@ -10,7 +10,9 @@ import pe.edu.upeu.bomerp.catalogo.categoria.mapper.CategoriaMapper;
 import pe.edu.upeu.bomerp.catalogo.categoria.repository.CategoriaRepository;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoriaServiceImpl implements CategoriaService {
@@ -20,6 +22,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoriaResponse> listar() {
+        log.info("Listando categorias - consulta real a la base");
         return categoriaRepository.findAll().stream().map(categoriaMapper::toResponse).toList();
     }
 

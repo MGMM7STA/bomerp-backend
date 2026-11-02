@@ -30,15 +30,13 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-logging:
-  level:
-    pe.edu.upeu.bomerp: DEBUG
+
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: "*"
   endpoint:
     health:
       show-details: always
