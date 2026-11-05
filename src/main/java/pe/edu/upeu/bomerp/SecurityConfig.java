@@ -56,13 +56,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/api/v1/cuentas", "/api/v1/cuentas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTAS_CAMPANIAS).authenticated()
                         .requestMatchers(RUTAS_CAMPANIAS).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTA_ESTUDIANTES + "/yo").hasRole("ESTUDIANTE")
                         .requestMatchers(RUTA_ESTUDIANTES, RUTA_ESTUDIANTES + "/**").hasAnyRole("COORDINADOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/resumen").hasAnyRole("COORDINADOR", "ADMIN")
                         .requestMatchers(HttpMethod.PATCH, RUTA_REGISTROS + "/*/anular",
-                                RUTA_REGISTROS + "/*/validar", RUTA_REGISTROS + "/*/rechazar")
+                                RUTA_REGISTROS + "/*/validar", RUTA_REGISTROS + "/*/rechazar",
+                                RUTA_REGISTROS + "/*/detalles/*/validar", RUTA_REGISTROS + "/*/detalles/*/rechazar")
                         .hasAnyRole("COORDINADOR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, RUTA_REGISTROS).hasRole("ESTUDIANTE")
                         .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/**").authenticated()

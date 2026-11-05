@@ -6,7 +6,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,10 +21,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.participacion.estudiante.service.EstudianteService;
+import pe.edu.upeu.bomerp.participacion.registro.dto.FotoEvidencia;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RechazoRequest;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroReporte;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroRequest;
@@ -29,7 +36,10 @@ import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroResponse;
 import pe.edu.upeu.bomerp.participacion.registro.entity.EstadoRegistro;
 import pe.edu.upeu.bomerp.participacion.registro.service.RegistroService;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Tag(name = "Participacion")
@@ -85,12 +95,67 @@ public class RegistroController {
     }
 
     @Operation(summary = "Registra la participacion diaria consumiendo el cupo de la campania")
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public RegistroResponse crear(@Valid @RequestBody RegistroRequest request,
                                   @AuthenticationPrincipal Jwt jwt) {
         Long estudianteId = estudianteService.resolver(jwt).getId();
         return registroService.crear(request, estudianteId);
+    }
+
+    @Operation(summary = "Registra la participacion con una foto por evidencia (partes foto-0, foto-1...)")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public RegistroResponse crearConFotos(@Valid @RequestPart("registro") RegistroRequest request,
+                                          MultipartHttpServletRequest peticion,
+                                          @AuthenticationPrincipal Jwt jwt) {
+        Long estudianteId = estudianteService.resolver(jwt).getId();
+        Map<Integer, MultipartFile> fotos = new HashMap<>();
+        peticion.getFileMap().forEach((nombre, archivo) -> {
+            if (nombre.startsWith("foto-")) {
+                fotos.put(Integer.parseInt(nombre.substring(5)), archivo);
+            }
+        });
+        log.info("Registrando participacion estudianteId={} con {} fotos", estudianteId, fotos.size());
+        return registroService.crear(request, estudianteId, fotos);
+    }
+
+    @Operation(summary = "Devuelve la foto de una evidencia")
+    @GetMapping("/{id}/detalles/{detalleId}/foto")
+    public ResponseEntity<Resource> foto(@PathVariable Long id,
+                                         @PathVariable Long detalleId,
+                                         @AuthenticationPrincipal Jwt jwt,
+                                         Authentication autenticacion) {
+        RegistroResponse registro = registroService.obtener(id);
+        if (!esCoordinacion(autenticacion)
+                && !registro.getEstudianteId().equals(estudianteService.resolver(jwt).getId())) {
+            throw new ResourceNotFoundException("Registro no encontrado: " + id);
+        }
+        FotoEvidencia foto = registroService.foto(id, detalleId);
+        return ResponseEntity.ok()
+                .contentType(foto.tipo())
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePrivate())
+                .body(foto.contenido());
+    }
+
+    @Operation(summary = "Valida una evidencia del registro")
+    @PatchMapping("/{id}/detalles/{detalleId}/validar")
+    public ResponseEntity<RegistroResponse> validarDetalle(@PathVariable Long id,
+                                                           @PathVariable Long detalleId,
+                                                           @AuthenticationPrincipal Jwt jwt) {
+        log.info("Validando evidencia id={} del registro id={}", detalleId, id);
+        return ResponseEntity.ok(registroService.validarDetalle(id, detalleId, nombreDe(jwt)));
+    }
+
+    @Operation(summary = "Rechaza una evidencia del registro, con motivo, y devuelve su cupo")
+    @PatchMapping("/{id}/detalles/{detalleId}/rechazar")
+    public ResponseEntity<RegistroResponse> rechazarDetalle(@PathVariable Long id,
+                                                            @PathVariable Long detalleId,
+                                                            @Valid @RequestBody RechazoRequest request,
+                                                            @AuthenticationPrincipal Jwt jwt) {
+        log.info("Rechazando evidencia id={} del registro id={}", detalleId, id);
+        return ResponseEntity.ok(
+                registroService.rechazarDetalle(id, detalleId, request.getMotivo(), nombreDe(jwt)));
     }
 
     @Operation(summary = "Anula un registro y devuelve el cupo diario consumido por sus evidencias")

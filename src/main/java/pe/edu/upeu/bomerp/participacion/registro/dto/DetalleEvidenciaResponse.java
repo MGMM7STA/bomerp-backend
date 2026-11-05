@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetalleEvidenciaResponse {
+    private Long id;
     private Long habitoId;
     private String nombreHabito;
     private String descripcion;
@@ -20,4 +21,7 @@ public class DetalleEvidenciaResponse {
     private BigDecimal puntajeUnitario;
     private Integer veces;
     private BigDecimal subtotal;
+    private String estado;
+    private String motivoRechazo;
+    private Boolean tieneFoto;
 }

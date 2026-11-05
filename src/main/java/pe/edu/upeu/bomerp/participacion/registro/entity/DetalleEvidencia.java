@@ -2,6 +2,8 @@ package pe.edu.upeu.bomerp.participacion.registro.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,4 +51,14 @@ public class DetalleEvidencia {
 
     @Column(name = "SUBTOTAL", nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO", nullable = false, length = 20)
+    private EstadoRegistro estado = EstadoRegistro.ENVIADO;
+
+    @Column(name = "MOTIVO_RECHAZO", length = 300)
+    private String motivoRechazo;
+
+    @Column(name = "ARCHIVO_IMAGEN", length = 120)
+    private String archivoImagen;
 }

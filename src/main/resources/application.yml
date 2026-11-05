@@ -3,3 +3,17 @@ spring:
     name: bomerp-backend
   profiles:
     active: dev
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 30MB
+
+bomerp:
+  evidencias:
+    directorio: ${EVIDENCIAS_DIR:uploads/evidencias}
+  keycloak:
+    admin:
+      url: ${KEYCLOAK_ADMIN_URL:http://localhost:38080}
+      realm: saludable
+      client-id: saludable-backend
+      client-secret: ${KEYCLOAK_BACKEND_SECRET:saludable-backend-dev-2026}

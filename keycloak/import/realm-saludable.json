@@ -41,6 +41,17 @@
       "attributes": {
         "pkce.code.challenge.method": "S256"
       }
+    },
+    {
+      "clientId": "saludable-backend",
+      "name": "Semestre Saludable API (gestion de cuentas)",
+      "enabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "saludable-backend-dev-2026",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true
     }
   ],
   "users": [
@@ -100,6 +111,19 @@
       "realmRoles": [
         "ADMIN"
       ]
+    },
+    {
+      "username": "service-account-saludable-backend",
+      "enabled": true,
+      "serviceAccountClientId": "saludable-backend",
+      "clientRoles": {
+        "realm-management": [
+          "manage-users",
+          "view-users",
+          "query-users",
+          "view-realm"
+        ]
+      }
     }
   ]
 }

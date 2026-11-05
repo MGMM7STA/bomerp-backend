@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -77,5 +78,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleRegistroYaAnulado(RegistroYaAnuladoException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, Object>> handleArchivoMuyGrande(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE)
+                .body(cuerpo(HttpStatus.CONTENT_TOO_LARGE, "Content Too Large",
+                        "Las fotos pesan demasiado: cada una debe pesar menos de 5 MB"));
+    }
+
+    @ExceptionHandler(ServicioExternoException.class)
+    public ResponseEntity<Map<String, Object>> handleServicioExterno(ServicioExternoException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(cuerpo(HttpStatus.BAD_GATEWAY, "Bad Gateway", ex.getMessage()));
     }
 }

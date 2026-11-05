@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.service.CampaniaService;
 import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
@@ -12,6 +13,7 @@ import pe.edu.upeu.bomerp.exception.EstadoRegistroInvalidoException;
 import pe.edu.upeu.bomerp.exception.RegistroYaAnuladoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.participacion.registro.dto.DetalleEvidenciaRequest;
+import pe.edu.upeu.bomerp.participacion.registro.dto.FotoEvidencia;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroAgregado;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroReporte;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroRequest;
@@ -26,6 +28,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -39,6 +43,7 @@ public class RegistroServiceImpl implements RegistroService {
     private final HabitoService habitoService;
     private final CampaniaService campaniaService;
     private final RegistroMapper registroMapper;
+    private final FotoEvidenciaService fotoEvidenciaService;
 
     @Override
     @Transactional(readOnly = true)
@@ -78,6 +83,13 @@ public class RegistroServiceImpl implements RegistroService {
     @Override
     @Transactional
     public RegistroResponse crear(RegistroRequest request, Long estudianteId) {
+        return crear(request, estudianteId, Map.of());
+    }
+
+    @Override
+    @Transactional
+    public RegistroResponse crear(RegistroRequest request, Long estudianteId, Map<Integer, MultipartFile> fotos) {
+        fotos.values().forEach(fotoEvidenciaService::verificar);
         CampaniaResponse campania = campaniaService.obtenerActiva();
         LocalDate hoy = LocalDate.now();
 
@@ -90,7 +102,8 @@ public class RegistroServiceImpl implements RegistroService {
         BigDecimal puntajeTotal = BigDecimal.ZERO;
         int totalEvidencias = 0;
 
-        for (DetalleEvidenciaRequest detalleRequest : request.getDetalles()) {
+        for (int indice = 0; indice < request.getDetalles().size(); indice++) {
+            DetalleEvidenciaRequest detalleRequest = request.getDetalles().get(indice);
             HabitoResponse habito = habitoService.obtener(detalleRequest.getHabitoId());
             if (!campaniaService.incluyeHabito(campania.getId(), habito.getId())) {
                 throw new IllegalArgumentException(
@@ -103,6 +116,7 @@ public class RegistroServiceImpl implements RegistroService {
 
             DetalleEvidencia detalle = registroMapper.toDetalle(detalleRequest, habito);
             detalle.setRegistro(registro);
+            detalle.setEstado(EstadoRegistro.ENVIADO);
             registro.getDetalles().add(detalle);
 
             puntajeTotal = puntajeTotal.add(detalle.getSubtotal());
@@ -111,6 +125,13 @@ public class RegistroServiceImpl implements RegistroService {
 
         registro.setPuntajeTotal(puntajeTotal);
         registro.setTotalEvidencias(totalEvidencias);
+
+        for (int indice = 0; indice < registro.getDetalles().size(); indice++) {
+            MultipartFile foto = fotos.get(indice);
+            if (foto != null) {
+                registro.getDetalles().get(indice).setArchivoImagen(fotoEvidenciaService.guardar(foto));
+            }
+        }
 
         return registroMapper.toResponse(registroRepository.save(registro));
     }
@@ -125,14 +146,15 @@ public class RegistroServiceImpl implements RegistroService {
             throw new RegistroYaAnuladoException("El registro " + id + " ya esta anulado");
         }
 
-        if (registro.getEstado() != EstadoRegistro.RECHAZADO) {
-            LocalDate fechaRegistro = registro.getFecha().toLocalDate();
-            for (DetalleEvidencia detalle : registro.getDetalles()) {
+        LocalDate fechaRegistro = registro.getFecha().toLocalDate();
+        for (DetalleEvidencia detalle : registro.getDetalles()) {
+            if (detalle.getEstado() != EstadoRegistro.RECHAZADO) {
                 campaniaService.devolverCupo(
                         registro.getCampaniaId(),
                         registro.getEstudianteId(),
                         fechaRegistro,
                         detalle.getVeces());
+                detalle.setEstado(EstadoRegistro.ANULADO);
             }
         }
 
@@ -144,28 +166,48 @@ public class RegistroServiceImpl implements RegistroService {
     @Transactional
     public RegistroResponse validar(Long id, String revisor) {
         RegistroParticipacion registro = registroPorRevisar(id);
-        registro.setEstado(EstadoRegistro.VALIDADO);
-        registro.setMotivoRechazo(null);
-        marcarRevision(registro, revisor);
-        return registroMapper.toResponse(registroRepository.save(registro));
+        for (DetalleEvidencia detalle : pendientes(registro)) {
+            aprobar(detalle);
+        }
+        return cerrarRevision(registro, revisor);
     }
 
     @Override
     @Transactional
     public RegistroResponse rechazar(Long id, String motivo, String revisor) {
         RegistroParticipacion registro = registroPorRevisar(id);
-        LocalDate fechaRegistro = registro.getFecha().toLocalDate();
-        for (DetalleEvidencia detalle : registro.getDetalles()) {
-            campaniaService.liberarCupo(
-                    registro.getCampaniaId(),
-                    registro.getEstudianteId(),
-                    fechaRegistro,
-                    detalle.getVeces());
+        for (DetalleEvidencia detalle : pendientes(registro)) {
+            descartar(registro, detalle, motivo);
         }
-        registro.setEstado(EstadoRegistro.RECHAZADO);
-        registro.setMotivoRechazo(motivo.trim());
-        marcarRevision(registro, revisor);
-        return registroMapper.toResponse(registroRepository.save(registro));
+        return cerrarRevision(registro, revisor);
+    }
+
+    @Override
+    @Transactional
+    public RegistroResponse validarDetalle(Long registroId, Long detalleId, String revisor) {
+        RegistroParticipacion registro = registroPorRevisar(registroId);
+        aprobar(detallePorRevisar(registro, detalleId));
+        return cerrarRevision(registro, revisor);
+    }
+
+    @Override
+    @Transactional
+    public RegistroResponse rechazarDetalle(Long registroId, Long detalleId, String motivo, String revisor) {
+        RegistroParticipacion registro = registroPorRevisar(registroId);
+        descartar(registro, detallePorRevisar(registro, detalleId), motivo);
+        return cerrarRevision(registro, revisor);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FotoEvidencia foto(Long registroId, Long detalleId) {
+        RegistroParticipacion registro = registroRepository.findById(registroId)
+                .orElseThrow(() -> new ResourceNotFoundException("Registro no encontrado: " + registroId));
+        DetalleEvidencia detalle = buscarDetalle(registro, detalleId);
+        if (detalle.getArchivoImagen() == null) {
+            throw new ResourceNotFoundException("La evidencia " + detalleId + " no tiene foto");
+        }
+        return fotoEvidenciaService.leer(detalle.getArchivoImagen());
     }
 
     private RegistroParticipacion registroPorRevisar(Long id) {
@@ -178,9 +220,60 @@ public class RegistroServiceImpl implements RegistroService {
         return registro;
     }
 
-    private void marcarRevision(RegistroParticipacion registro, String revisor) {
-        registro.setRevisadoPor(revisor);
-        registro.setFechaRevision(LocalDateTime.now());
+    private DetalleEvidencia buscarDetalle(RegistroParticipacion registro, Long detalleId) {
+        return registro.getDetalles().stream()
+                .filter(detalle -> detalle.getId().equals(detalleId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "La evidencia " + detalleId + " no pertenece al registro " + registro.getId()));
+    }
+
+    private DetalleEvidencia detallePorRevisar(RegistroParticipacion registro, Long detalleId) {
+        DetalleEvidencia detalle = buscarDetalle(registro, detalleId);
+        if (detalle.getEstado() != EstadoRegistro.ENVIADO) {
+            throw new EstadoRegistroInvalidoException(
+                    "La evidencia " + detalleId + " ya fue revisada: su estado es " + detalle.getEstado());
+        }
+        return detalle;
+    }
+
+    private List<DetalleEvidencia> pendientes(RegistroParticipacion registro) {
+        return registro.getDetalles().stream()
+                .filter(detalle -> detalle.getEstado() == EstadoRegistro.ENVIADO)
+                .toList();
+    }
+
+    private void aprobar(DetalleEvidencia detalle) {
+        detalle.setEstado(EstadoRegistro.VALIDADO);
+        detalle.setMotivoRechazo(null);
+    }
+
+    private void descartar(RegistroParticipacion registro, DetalleEvidencia detalle, String motivo) {
+        campaniaService.liberarCupo(
+                registro.getCampaniaId(),
+                registro.getEstudianteId(),
+                registro.getFecha().toLocalDate(),
+                detalle.getVeces());
+        detalle.setEstado(EstadoRegistro.RECHAZADO);
+        detalle.setMotivoRechazo(motivo.trim());
+    }
+
+    private RegistroResponse cerrarRevision(RegistroParticipacion registro, String revisor) {
+        boolean quedanPendientes = registro.getDetalles().stream()
+                .anyMatch(detalle -> detalle.getEstado() == EstadoRegistro.ENVIADO);
+        if (!quedanPendientes) {
+            boolean algunoValido = registro.getDetalles().stream()
+                    .anyMatch(detalle -> detalle.getEstado() == EstadoRegistro.VALIDADO);
+            registro.setEstado(algunoValido ? EstadoRegistro.VALIDADO : EstadoRegistro.RECHAZADO);
+            registro.setMotivoRechazo(algunoValido ? null : registro.getDetalles().stream()
+                    .map(DetalleEvidencia::getMotivoRechazo)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null));
+            registro.setRevisadoPor(revisor);
+            registro.setFechaRevision(LocalDateTime.now());
+        }
+        return registroMapper.toResponse(registroRepository.save(registro));
     }
 
     private Sort construirOrden(String ordenarPor, String direccion) {
