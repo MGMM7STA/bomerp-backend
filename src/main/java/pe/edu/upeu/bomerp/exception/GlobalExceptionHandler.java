@@ -52,6 +52,12 @@ public class GlobalExceptionHandler {
                 .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
     }
 
+    @ExceptionHandler(EstadoRegistroInvalidoException.class)
+    public ResponseEntity<Map<String, Object>> handleEstadoRegistroInvalido(EstadoRegistroInvalidoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(cuerpo(HttpStatus.CONFLICT, "Conflict", ex.getMessage()));
+    }
+
     @ExceptionHandler(ReferenciaEnUsoException.class)
     public ResponseEntity<Map<String, Object>> handleReferenciaEnUso(ReferenciaEnUsoException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)

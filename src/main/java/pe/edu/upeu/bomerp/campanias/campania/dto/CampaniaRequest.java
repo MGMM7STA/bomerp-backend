@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 import java.time.LocalDate;
 
 @Getter
@@ -30,4 +31,6 @@ public class CampaniaRequest {
     @NotBlank
     @Pattern(regexp = "ACTIVA|CERRADA|BORRADOR")
     private String estado;
+
+    private List<Long> habitoIds;
 }

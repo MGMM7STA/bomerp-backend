@@ -10,6 +10,7 @@ import pe.edu.upeu.bomerp.campanias.campania.entity.Campania;
 @Mapper(componentModel = "spring")
 public interface CampaniaMapper {
 
+    @Mapping(target = "habitoIds", ignore = true)
     CampaniaResponse toResponse(Campania campania);
 
     @Mapping(target = "id", ignore = true)

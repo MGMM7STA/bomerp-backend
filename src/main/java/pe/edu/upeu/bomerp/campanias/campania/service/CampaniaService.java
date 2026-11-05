@@ -2,6 +2,7 @@ package pe.edu.upeu.bomerp.campanias.campania.service;
 
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaRequest;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
+import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,4 +23,10 @@ public interface CampaniaService {
     void consumirCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces);
 
     void devolverCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces);
+
+    void liberarCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces);
+
+    List<HabitoResponse> habitosDeActiva();
+
+    boolean incluyeHabito(Long campaniaId, Long habitoId);
 }

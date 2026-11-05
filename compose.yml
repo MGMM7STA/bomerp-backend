@@ -58,6 +58,7 @@ services:
     volumes:
       - keycloak-data-prod:/opt/keycloak/data
       - ./keycloak/import:/opt/keycloak/data/import
+      - ./keycloak/themes:/opt/keycloak/themes
 
   bomerp-backend:
     build: .

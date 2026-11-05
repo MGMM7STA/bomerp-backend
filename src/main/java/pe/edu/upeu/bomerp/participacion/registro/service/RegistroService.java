@@ -20,7 +20,11 @@ public interface RegistroService {
 
     RegistroResponse obtener(Long id);
 
-    RegistroResponse crear(RegistroRequest request);
+    RegistroResponse crear(RegistroRequest request, Long estudianteId);
 
     RegistroResponse anular(Long id);
+
+    RegistroResponse validar(Long id, String revisor);
+
+    RegistroResponse rechazar(Long id, String motivo, String revisor);
 }

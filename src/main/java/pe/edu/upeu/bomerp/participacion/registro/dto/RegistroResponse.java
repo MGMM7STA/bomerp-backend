@@ -22,5 +22,8 @@ public class RegistroResponse {
     private String estado;
     private Integer totalEvidencias;
     private BigDecimal puntajeTotal;
+    private String motivoRechazo;
+    private String revisadoPor;
+    private LocalDateTime fechaRevision;
     private List<DetalleEvidenciaResponse> detalles;
 }

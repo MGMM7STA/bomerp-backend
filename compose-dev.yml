@@ -59,6 +59,7 @@ services:
     volumes:
       - keycloak-data:/opt/keycloak/data
       - ./keycloak/import:/opt/keycloak/data/import
+      - ./keycloak/themes:/opt/keycloak/themes
 
 volumes:
   oracle-data:

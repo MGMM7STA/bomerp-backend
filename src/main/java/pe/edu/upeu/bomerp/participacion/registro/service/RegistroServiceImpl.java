@@ -8,6 +8,7 @@ import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.service.CampaniaService;
 import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
 import pe.edu.upeu.bomerp.campanias.habito.service.HabitoService;
+import pe.edu.upeu.bomerp.exception.EstadoRegistroInvalidoException;
 import pe.edu.upeu.bomerp.exception.RegistroYaAnuladoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.participacion.registro.dto.DetalleEvidenciaRequest;
@@ -76,12 +77,12 @@ public class RegistroServiceImpl implements RegistroService {
 
     @Override
     @Transactional
-    public RegistroResponse crear(RegistroRequest request) {
+    public RegistroResponse crear(RegistroRequest request, Long estudianteId) {
         CampaniaResponse campania = campaniaService.obtenerActiva();
         LocalDate hoy = LocalDate.now();
 
         RegistroParticipacion registro = new RegistroParticipacion();
-        registro.setEstudianteId(request.getEstudianteId());
+        registro.setEstudianteId(estudianteId);
         registro.setCampaniaId(campania.getId());
         registro.setFecha(LocalDateTime.now());
         registro.setEstado(EstadoRegistro.ENVIADO);
@@ -91,9 +92,14 @@ public class RegistroServiceImpl implements RegistroService {
 
         for (DetalleEvidenciaRequest detalleRequest : request.getDetalles()) {
             HabitoResponse habito = habitoService.obtener(detalleRequest.getHabitoId());
+            if (!campaniaService.incluyeHabito(campania.getId(), habito.getId())) {
+                throw new IllegalArgumentException(
+                        "El habito '" + habito.getNombre() + "' no forma parte de la campania "
+                                + campania.getNombre());
+            }
 
             campaniaService.consumirCupo(
-                    campania.getId(), request.getEstudianteId(), hoy, detalleRequest.getVeces());
+                    campania.getId(), estudianteId, hoy, detalleRequest.getVeces());
 
             DetalleEvidencia detalle = registroMapper.toDetalle(detalleRequest, habito);
             detalle.setRegistro(registro);
@@ -119,17 +125,62 @@ public class RegistroServiceImpl implements RegistroService {
             throw new RegistroYaAnuladoException("El registro " + id + " ya esta anulado");
         }
 
+        if (registro.getEstado() != EstadoRegistro.RECHAZADO) {
+            LocalDate fechaRegistro = registro.getFecha().toLocalDate();
+            for (DetalleEvidencia detalle : registro.getDetalles()) {
+                campaniaService.devolverCupo(
+                        registro.getCampaniaId(),
+                        registro.getEstudianteId(),
+                        fechaRegistro,
+                        detalle.getVeces());
+            }
+        }
+
+        registro.setEstado(EstadoRegistro.ANULADO);
+        return registroMapper.toResponse(registroRepository.save(registro));
+    }
+
+    @Override
+    @Transactional
+    public RegistroResponse validar(Long id, String revisor) {
+        RegistroParticipacion registro = registroPorRevisar(id);
+        registro.setEstado(EstadoRegistro.VALIDADO);
+        registro.setMotivoRechazo(null);
+        marcarRevision(registro, revisor);
+        return registroMapper.toResponse(registroRepository.save(registro));
+    }
+
+    @Override
+    @Transactional
+    public RegistroResponse rechazar(Long id, String motivo, String revisor) {
+        RegistroParticipacion registro = registroPorRevisar(id);
         LocalDate fechaRegistro = registro.getFecha().toLocalDate();
         for (DetalleEvidencia detalle : registro.getDetalles()) {
-            campaniaService.devolverCupo(
+            campaniaService.liberarCupo(
                     registro.getCampaniaId(),
                     registro.getEstudianteId(),
                     fechaRegistro,
                     detalle.getVeces());
         }
-
-        registro.setEstado(EstadoRegistro.ANULADO);
+        registro.setEstado(EstadoRegistro.RECHAZADO);
+        registro.setMotivoRechazo(motivo.trim());
+        marcarRevision(registro, revisor);
         return registroMapper.toResponse(registroRepository.save(registro));
+    }
+
+    private RegistroParticipacion registroPorRevisar(Long id) {
+        RegistroParticipacion registro = registroRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Registro no encontrado: " + id));
+        if (registro.getEstado() != EstadoRegistro.ENVIADO) {
+            throw new EstadoRegistroInvalidoException(
+                    "El registro " + id + " ya fue revisado: su estado es " + registro.getEstado());
+        }
+        return registro;
+    }
+
+    private void marcarRevision(RegistroParticipacion registro, String revisor) {
+        registro.setRevisadoPor(revisor);
+        registro.setFechaRevision(LocalDateTime.now());
     }
 
     private Sort construirOrden(String ordenarPor, String direccion) {

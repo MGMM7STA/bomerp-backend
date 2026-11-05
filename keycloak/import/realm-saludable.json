@@ -1,6 +1,7 @@
 {
   "realm": "saludable",
   "displayName": "Semestre Saludable UPeU",
+  "loginTheme": "saludable",
   "enabled": true,
   "sslRequired": "none",
   "registrationAllowed": false,

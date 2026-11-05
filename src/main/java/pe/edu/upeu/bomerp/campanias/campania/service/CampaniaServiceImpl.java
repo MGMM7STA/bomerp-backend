@@ -7,14 +7,19 @@ import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaRequest;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.entity.Campania;
+import pe.edu.upeu.bomerp.campanias.campania.entity.CampaniaHabito;
 import pe.edu.upeu.bomerp.campanias.campania.entity.CupoDiario;
 import pe.edu.upeu.bomerp.campanias.campania.mapper.CampaniaMapper;
+import pe.edu.upeu.bomerp.campanias.campania.repository.CampaniaHabitoRepository;
 import pe.edu.upeu.bomerp.campanias.campania.repository.CampaniaRepository;
 import pe.edu.upeu.bomerp.campanias.campania.repository.CupoDiarioRepository;
+import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
+import pe.edu.upeu.bomerp.campanias.habito.service.HabitoService;
 import pe.edu.upeu.bomerp.exception.CupoDiarioExcedidoException;
 import pe.edu.upeu.bomerp.exception.ReferenciaEnUsoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Slf4j
@@ -27,17 +32,19 @@ public class CampaniaServiceImpl implements CampaniaService {
     private final CampaniaRepository campaniaRepository;
     private final CupoDiarioRepository cupoDiarioRepository;
     private final CampaniaMapper campaniaMapper;
+    private final CampaniaHabitoRepository campaniaHabitoRepository;
+    private final HabitoService habitoService;
 
     @Override
     @Transactional(readOnly = true)
     public List<CampaniaResponse> listar() {
-        return campaniaRepository.findAll().stream().map(campaniaMapper::toResponse).toList();
+        return campaniaRepository.findAll().stream().map(this::aResponse).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public CampaniaResponse obtener(Long id) {
-        return campaniaMapper.toResponse(buscarOFallar(id));
+        return aResponse(buscarOFallar(id));
     }
 
     @Override
@@ -45,7 +52,7 @@ public class CampaniaServiceImpl implements CampaniaService {
     public CampaniaResponse obtenerActiva() {
         Campania campania = campaniaRepository.findFirstByEstado(ACTIVA)
                 .orElseThrow(() -> new ResourceNotFoundException("No hay ninguna campania activa"));
-        return campaniaMapper.toResponse(campania);
+        return aResponse(campania);
     }
 
     @Override
@@ -55,7 +62,9 @@ public class CampaniaServiceImpl implements CampaniaService {
         validarActivaUnica(request, null);
         Campania campania = campaniaMapper.toEntity(request);
         log.info("Creando campania nombre={} estado={}", request.getNombre(), request.getEstado());
-        return campaniaMapper.toResponse(campaniaRepository.save(campania));
+        Campania guardada = campaniaRepository.save(campania);
+        sincronizarHabitos(guardada.getId(), request.getHabitoIds());
+        return aResponse(guardada);
     }
 
     @Override
@@ -66,7 +75,9 @@ public class CampaniaServiceImpl implements CampaniaService {
         validarActivaUnica(request, id);
         campaniaMapper.actualizar(request, campania);
         log.info("Actualizando campania id={} estado={}", id, request.getEstado());
-        return campaniaMapper.toResponse(campaniaRepository.save(campania));
+        Campania guardada = campaniaRepository.save(campania);
+        sincronizarHabitos(guardada.getId(), request.getHabitoIds());
+        return aResponse(guardada);
     }
 
     @Override
@@ -110,6 +121,56 @@ public class CampaniaServiceImpl implements CampaniaService {
         }
         cupo.setEvidenciasUsadas(usadas);
         cupoDiarioRepository.save(cupo);
+    }
+
+    @Override
+    @Transactional
+    public void liberarCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces) {
+        cupoDiarioRepository.findByCampaniaIdAndEstudianteIdAndFecha(campaniaId, estudianteId, fecha)
+                .ifPresent(cupo -> {
+                    cupo.setEvidenciasUsadas(Math.max(0, cupo.getEvidenciasUsadas() - veces));
+                    cupoDiarioRepository.save(cupo);
+                });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<HabitoResponse> habitosDeActiva() {
+        Campania activa = campaniaRepository.findFirstByEstado(ACTIVA)
+                .orElseThrow(() -> new ResourceNotFoundException("No hay ninguna campania activa"));
+        return campaniaHabitoRepository.findByCampaniaId(activa.getId()).stream()
+                .map(enlace -> habitoService.obtener(enlace.getHabitoId()))
+                .filter(habito -> Integer.valueOf(1).equals(habito.getActivo()))
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean incluyeHabito(Long campaniaId, Long habitoId) {
+        return campaniaHabitoRepository.existsByCampaniaIdAndHabitoId(campaniaId, habitoId);
+    }
+
+    private void sincronizarHabitos(Long campaniaId, List<Long> habitoIds) {
+        if (habitoIds == null) {
+            return;
+        }
+        campaniaHabitoRepository.deleteByCampaniaId(campaniaId);
+        campaniaHabitoRepository.flush();
+        for (Long habitoId : new LinkedHashSet<>(habitoIds)) {
+            habitoService.obtener(habitoId);
+            CampaniaHabito enlace = new CampaniaHabito();
+            enlace.setCampaniaId(campaniaId);
+            enlace.setHabitoId(habitoId);
+            campaniaHabitoRepository.save(enlace);
+        }
+    }
+
+    private CampaniaResponse aResponse(Campania campania) {
+        CampaniaResponse respuesta = campaniaMapper.toResponse(campania);
+        respuesta.setHabitoIds(campaniaHabitoRepository.findByCampaniaId(campania.getId()).stream()
+                .map(CampaniaHabito::getHabitoId)
+                .toList());
+        return respuesta;
     }
 
     private void validarFechas(CampaniaRequest request) {

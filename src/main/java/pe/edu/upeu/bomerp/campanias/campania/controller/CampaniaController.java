@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaRequest;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.service.CampaniaService;
+import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
 import java.util.List;
 
 @Slf4j
@@ -40,6 +41,12 @@ public class CampaniaController {
     @GetMapping("/activa")
     public ResponseEntity<CampaniaResponse> obtenerActiva() {
         return ResponseEntity.ok(campaniaService.obtenerActiva());
+    }
+
+    @Operation(summary = "Lista los habitos que se practican en la campania activa")
+    @GetMapping("/activa/habitos")
+    public ResponseEntity<List<HabitoResponse>> habitosDeActiva() {
+        return ResponseEntity.ok(campaniaService.habitosDeActiva());
     }
 
     @Operation(summary = "Consulta una campania por id")

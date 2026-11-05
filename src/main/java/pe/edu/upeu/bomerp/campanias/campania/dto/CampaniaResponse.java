@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +20,5 @@ public class CampaniaResponse {
     private LocalDate fechaFin;
     private Integer maxEvidenciasDia;
     private String estado;
+    private List<Long> habitoIds;
 }

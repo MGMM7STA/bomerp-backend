@@ -49,6 +49,15 @@ public class RegistroParticipacion {
     @Column(name = "PUNTAJE_TOTAL", nullable = false, precision = 12, scale = 2)
     private BigDecimal puntajeTotal;
 
+    @Column(name = "MOTIVO_RECHAZO", length = 300)
+    private String motivoRechazo;
+
+    @Column(name = "REVISADO_POR", length = 150)
+    private String revisadoPor;
+
+    @Column(name = "FECHA_REVISION")
+    private LocalDateTime fechaRevision;
+
     @OneToMany(mappedBy = "registro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleEvidencia> detalles = new ArrayList<>();
 }

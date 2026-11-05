@@ -35,6 +35,8 @@ public class SecurityConfig {
 
     private static final String RUTA_REGISTROS = "/api/v1/participacion/registros";
 
+    private static final String RUTA_ESTUDIANTES = "/api/v1/participacion/estudiantes";
+
     private static final String[] RUTAS_PREMIOS = {
             "/api/v1/categorias-premio/**",
             "/api/v1/premios/**"
@@ -55,10 +57,14 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers(HttpMethod.GET, RUTAS_CAMPANIAS).authenticated()
-                        .requestMatchers(RUTAS_CAMPANIAS).hasAnyRole("COORDINADOR", "ADMIN")
+                        .requestMatchers(RUTAS_CAMPANIAS).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, RUTA_ESTUDIANTES + "/yo").hasRole("ESTUDIANTE")
+                        .requestMatchers(RUTA_ESTUDIANTES, RUTA_ESTUDIANTES + "/**").hasAnyRole("COORDINADOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/resumen").hasAnyRole("COORDINADOR", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, RUTA_REGISTROS + "/*/anular").hasAnyRole("COORDINADOR", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, RUTA_REGISTROS).hasAnyRole("ESTUDIANTE", "COORDINADOR", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, RUTA_REGISTROS + "/*/anular",
+                                RUTA_REGISTROS + "/*/validar", RUTA_REGISTROS + "/*/rechazar")
+                        .hasAnyRole("COORDINADOR", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, RUTA_REGISTROS).hasRole("ESTUDIANTE")
                         .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/**").authenticated()
                         .requestMatchers(HttpMethod.GET, RUTAS_PREMIOS).authenticated()
                         .requestMatchers(RUTAS_PREMIOS).hasAnyRole("COORDINADOR", "ADMIN")

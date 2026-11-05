@@ -1,0 +1,286 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap");
+
+:root,
+.pf-v5-theme-dark {
+    --us-navy: #003866;
+    --us-navy-900: #002a4d;
+    --us-lime: #b2cc23;
+    --us-orange: #f7a801;
+    --us-ink: #14212e;
+    --us-text: #3d4a58;
+    --us-muted: #6a7787;
+    --us-line: #d9e0e7;
+    --us-bg: #eef2f5;
+    --us-danger: #c62828;
+    color-scheme: light;
+}
+
+html.login-pf,
+.login-pf body,
+body#keycloak-bg {
+    background: var(--us-bg) !important;
+    font-family: Roboto, "Segoe UI", system-ui, sans-serif;
+    color: var(--us-text);
+}
+
+.pf-v5-c-login {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+    --pf-v5-c-login__main--BackgroundColor: #ffffff;
+}
+
+.pf-v5-c-login__container {
+    width: 100%;
+    max-width: 440px;
+    padding: 0;
+    grid-template-columns: 1fr;
+    grid-template-areas: "header" "main";
+    row-gap: 0;
+}
+
+#kc-header.pf-v5-c-login__header {
+    grid-area: header;
+    padding: 0 0 20px;
+    margin: 0;
+    color: #ffffff;
+}
+
+#kc-header-wrapper {
+    height: 76px;
+    font-size: 0 !important;
+    letter-spacing: 0;
+    background: url("../img/logo.png") no-repeat center / contain;
+}
+
+#kc-header::after {
+    display: none;
+}
+
+.pf-v5-c-login__main {
+    grid-area: main;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    background-color: #ffffff !important;
+    border-radius: 16px;
+    border: 1px solid var(--us-line);
+    box-shadow: 0 12px 32px rgba(0, 56, 102, 0.08);
+    overflow: hidden;
+    position: relative;
+}
+
+.pf-v5-c-login__main::before {
+    content: "";
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg,
+        var(--us-navy) 0 60%,
+        var(--us-lime) 60% 85%,
+        var(--us-orange) 85% 100%);
+}
+
+.pf-v5-c-login__main-header {
+    padding: 28px 28px 4px;
+    display: block;
+}
+
+#kc-page-title {
+    font-family: Montserrat, Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    color: var(--us-ink) !important;
+    margin: 0;
+}
+
+#kc-page-title::after {
+    content: "Usa tu usuario de la universidad para continuar.";
+    display: block;
+    margin-top: 6px;
+    font-family: Roboto, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--us-muted);
+}
+
+.pf-v5-c-login__main-body {
+    padding: 20px 28px 28px;
+}
+
+.pf-v5-c-form__label-text,
+.pf-v5-c-form__label {
+    color: var(--us-ink) !important;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.pf-v5-c-form-control,
+.pf-v5-theme-dark .pf-v5-c-form-control {
+    --pf-v5-c-form-control--BackgroundColor: #ffffff;
+    --pf-v5-c-form-control--before--BorderTopColor: var(--us-line);
+    --pf-v5-c-form-control--before--BorderRightColor: var(--us-line);
+    --pf-v5-c-form-control--before--BorderLeftColor: var(--us-line);
+    --pf-v5-c-form-control--before--BorderBottomColor: var(--us-line);
+    --pf-v5-c-form-control--after--BorderBottomColor: var(--us-line);
+    --pf-v5-c-form-control--hover--after--BorderBottomColor: var(--us-navy);
+    --pf-v5-c-form-control--focus--after--BorderBottomColor: var(--us-navy);
+    --pf-v5-c-form-control--focus--after--BorderBottomWidth: 2px;
+    background-color: #ffffff !important;
+    color: var(--us-ink) !important;
+    border-radius: 10px;
+    min-height: 44px;
+}
+
+.pf-v5-c-form-control::before,
+.pf-v5-c-form-control::after {
+    border-radius: 10px;
+}
+
+.pf-v5-c-form-control > input {
+    color: var(--us-ink) !important;
+    padding-left: 14px;
+    outline: none !important;
+}
+
+.pf-v5-c-form-control:focus-within {
+    --pf-v5-c-form-control--before--BorderTopColor: var(--us-navy);
+    --pf-v5-c-form-control--before--BorderRightColor: var(--us-navy);
+    --pf-v5-c-form-control--before--BorderLeftColor: var(--us-navy);
+    --pf-v5-c-form-control--after--BorderBottomColor: var(--us-navy);
+    box-shadow: 0 0 0 3px rgba(178, 204, 35, 0.35);
+}
+
+#kc-form-login .pf-v5-c-form__group:empty {
+    display: none;
+}
+
+.pf-v5-c-input-group__item {
+    background-color: transparent !important;
+    border: 0 !important;
+}
+
+.pf-v5-c-input-group__item .pf-v5-c-button.pf-m-control {
+    border-radius: 10px;
+    color: var(--us-muted);
+    background: #ffffff;
+    margin-left: 6px;
+    border: 1px solid var(--us-line);
+    min-width: 44px;
+}
+
+.pf-v5-c-input-group__item .pf-v5-c-button.pf-m-control::after {
+    border: 0;
+}
+
+.pf-v5-c-button.pf-m-primary {
+    --pf-v5-c-button--m-primary--BackgroundColor: var(--us-navy);
+    --pf-v5-c-button--m-primary--hover--BackgroundColor: var(--us-navy-900);
+    --pf-v5-c-button--m-primary--focus--BackgroundColor: var(--us-navy-900);
+    --pf-v5-c-button--m-primary--active--BackgroundColor: var(--us-navy-900);
+    background-color: var(--us-navy) !important;
+    color: #ffffff !important;
+    border-radius: 10px;
+    min-height: 46px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+.pf-v5-c-button.pf-m-primary:hover {
+    background-color: var(--us-navy-900) !important;
+}
+
+.pf-v5-c-button:focus-visible {
+    outline: 3px solid rgba(178, 204, 35, 0.55);
+    outline-offset: 2px;
+}
+
+.pf-v5-c-check__label {
+    color: var(--us-text) !important;
+}
+
+.login-pf a,
+.pf-v5-c-login a {
+    color: var(--us-navy) !important;
+    font-weight: 500;
+}
+
+.pf-v5-c-alert.pf-m-danger,
+.pf-v5-theme-dark .pf-v5-c-alert.pf-m-danger {
+    background: #fdecec !important;
+    border: 1px solid #f3c2c2;
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+.pf-v5-c-alert.pf-m-danger .pf-v5-c-alert__title,
+.pf-v5-c-helper-text__item.pf-m-error,
+.pf-v5-c-helper-text__item-text.pf-m-error {
+    color: var(--us-danger) !important;
+}
+
+.pf-v5-c-form__actions {
+    margin-top: 8px;
+}
+
+@media (min-width: 900px) {
+    .pf-v5-c-login__container {
+        max-width: 920px;
+        column-gap: 0;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "header main";
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid var(--us-line);
+        box-shadow: 0 20px 48px rgba(0, 56, 102, 0.10);
+        overflow: hidden;
+    }
+
+    #kc-header.pf-v5-c-login__header {
+        background: var(--us-navy);
+        padding: 48px 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 32px;
+    }
+
+    #kc-header-wrapper {
+        height: 120px;
+        background-image: url("../img/logo-blanco.png");
+        background-position: left center;
+    }
+
+    #kc-header::after {
+        display: block;
+        content: "Registra tus hábitos saludables, suma puntos y participa por premios durante el semestre.";
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.82);
+        border-left: 3px solid var(--us-lime);
+        padding-left: 14px;
+    }
+
+    .pf-v5-c-login__main {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .pf-v5-c-login__main::before {
+        position: absolute;
+        inset: 0 0 auto 0;
+    }
+
+    .pf-v5-c-login__main-header {
+        padding: 44px 44px 4px;
+    }
+
+    .pf-v5-c-login__main-body {
+        padding: 20px 44px 44px;
+    }
+}
