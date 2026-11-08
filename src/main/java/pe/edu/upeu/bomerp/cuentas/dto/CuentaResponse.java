@@ -19,6 +19,7 @@ public class CuentaResponse {
     private String apellidos;
     private String correo;
     private String rol;
+    private String sede;
     private Boolean activa;
     private Instant creadaEn;
 }

@@ -50,7 +50,7 @@ public class CuentaController {
     public ResponseEntity<CuentaResponse> cambiarRol(@PathVariable String id,
                                                      @Valid @RequestBody RolRequest request,
                                                      @AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.ok(cuentaService.cambiarRol(id, request.getRol(), jwt.getSubject()));
+        return ResponseEntity.ok(cuentaService.cambiarRol(id, request.getRol(), request.getSede(), jwt.getSubject()));
     }
 
     @Operation(summary = "Activa o desactiva una cuenta sin borrarla")

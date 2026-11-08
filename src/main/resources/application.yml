@@ -11,6 +11,16 @@ spring:
 bomerp:
   evidencias:
     directorio: ${EVIDENCIAS_DIR:uploads/evidencias}
+  cuentas:
+    dominio-correo: ${CORREO_DOMINIO:upeu.edu.pe}
+    cliente-web: saludable-frontend
+    url-web: ${WEB_URL:http://localhost:4200/}
+  odoo:
+    url: ${ODOO_URL:}
+    db: ${ODOO_DB:crm_premios}
+    login: ${ODOO_LOGIN:}
+    api-key: ${ODOO_API_KEY:}
+    programa-puntos: Puntos Saludables
   keycloak:
     admin:
       url: ${KEYCLOAK_ADMIN_URL:http://localhost:38080}

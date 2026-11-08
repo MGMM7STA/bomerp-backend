@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pe.edu.upeu.bomerp.sedes.Sede;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.List;
             name = "UK_ACTA_CAMPANIA_PERIODO",
             columnNames = {
                 "CAMPANIA_ID",
+                "SEDE",
                 "FECHA_INICIO_PERIODO",
                 "FECHA_FIN_PERIODO"
             }
@@ -37,6 +39,10 @@ public class ActaPremiacion {
 
     @Column(name = "CAMPANIA_ID", nullable = false)
     private Long campaniaId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SEDE", nullable = false, length = 10)
+    private Sede sede;
 
     @Column(name = "FECHA_INICIO_PERIODO", nullable = false)
     private LocalDate fechaInicioPeriodo;

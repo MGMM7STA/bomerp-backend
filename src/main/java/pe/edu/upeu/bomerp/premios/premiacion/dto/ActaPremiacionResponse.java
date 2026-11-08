@@ -21,6 +21,7 @@ public class ActaPremiacionResponse {
 
     private Long id;
     private Long campaniaId;
+    private String sede;
     private LocalDate fechaInicioPeriodo;
     private LocalDate fechaFinPeriodo;
     private LocalDateTime fechaEmision;

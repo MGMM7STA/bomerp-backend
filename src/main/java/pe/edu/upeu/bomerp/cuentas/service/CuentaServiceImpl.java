@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pe.edu.upeu.bomerp.cuentas.dto.CuentaRequest;
 import pe.edu.upeu.bomerp.cuentas.dto.CuentaResponse;
+import pe.edu.upeu.bomerp.participacion.estudiante.service.EstudianteService;
+import pe.edu.upeu.bomerp.sedes.Sede;
+import pe.edu.upeu.bomerp.sedes.SedeService;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,6 +22,8 @@ public class CuentaServiceImpl implements CuentaService {
     private static final List<String> ROLES = List.of("ADMIN", "COORDINADOR", "ESTUDIANTE");
 
     private final KeycloakAdminCliente keycloak;
+    private final SedeService sedeService;
+    private final EstudianteService estudianteService;
 
     @Override
     public List<CuentaResponse> listar() {
@@ -28,15 +33,20 @@ public class CuentaServiceImpl implements CuentaService {
                 rolPorUsuario.put(texto(usuario, "id"), rol);
             }
         }
+        Map<String, Sede> sedes = sedeService.todas();
         return keycloak.usuarios().stream()
                 .filter(usuario -> !texto(usuario, "username").startsWith("service-account-"))
-                .map(usuario -> aResponse(usuario, rolPorUsuario.get(texto(usuario, "id"))))
+                .map(usuario -> aResponse(usuario, rolPorUsuario.get(texto(usuario, "id")),
+                        sedes.get(texto(usuario, "username"))))
                 .sorted(Comparator.comparing(CuentaResponse::getApellidos, Comparator.nullsLast(String::compareToIgnoreCase)))
                 .toList();
     }
 
     @Override
     public CuentaResponse crear(CuentaRequest request) {
+        if (!"ADMIN".equals(request.getRol()) && request.getSede() == null) {
+            throw new IllegalArgumentException("Elige la sede de la cuenta: solo el administrador no tiene sede");
+        }
         Map<String, Object> usuario = new HashMap<>();
         usuario.put("username", request.getUsuario().trim());
         usuario.put("firstName", request.getNombres().trim());
@@ -50,6 +60,9 @@ public class CuentaServiceImpl implements CuentaService {
         String id = keycloak.crearUsuario(usuario);
         try {
             keycloak.asignarRoles(id, List.of(keycloak.rol(request.getRol())));
+            if (!"ADMIN".equals(request.getRol())) {
+                sedeService.asignar(request.getUsuario().trim(), request.getSede());
+            }
         } catch (RuntimeException e) {
             keycloak.eliminarUsuario(id);
             throw e;
@@ -59,9 +72,18 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
-    public CuentaResponse cambiarRol(String id, String rol, String solicitante) {
+    public CuentaResponse cambiarRol(String id, String rol, Sede sede, String solicitante) {
         if (id.equals(solicitante) && !"ADMIN".equals(rol)) {
             throw new IllegalArgumentException("No puedes quitarte el rol de administrador a ti mismo");
+        }
+        String nombreUsuario = texto(keycloak.usuario(id), "username");
+        if ("ADMIN".equals(rol)) {
+            sedeService.quitar(nombreUsuario);
+        } else {
+            Sede destino = sede != null ? sede : sedeService.de(nombreUsuario).orElseThrow(
+                    () -> new IllegalArgumentException("Elige la sede de la cuenta"));
+            sedeService.asignar(nombreUsuario, destino);
+            estudianteService.cambiarSede(nombreUsuario, destino);
         }
         List<Map<String, Object>> actuales = keycloak.rolesDe(id).stream()
                 .filter(r -> ROLES.contains(texto(r, "name")))
@@ -95,16 +117,22 @@ public class CuentaServiceImpl implements CuentaService {
         log.info("Contrasenia temporal restablecida para la cuenta {}", id);
     }
 
+    @Override
+    public void eliminar(String id) {
+        keycloak.eliminarUsuario(id);
+    }
+
     private CuentaResponse obtener(String id) {
         String rol = keycloak.rolesDe(id).stream()
                 .map(r -> texto(r, "name"))
                 .filter(ROLES::contains)
                 .min(Comparator.comparingInt(ROLES::indexOf))
                 .orElse(null);
-        return aResponse(keycloak.usuario(id), rol);
+        Map<String, Object> usuario = keycloak.usuario(id);
+        return aResponse(usuario, rol, sedeService.de(texto(usuario, "username")).orElse(null));
     }
 
-    private CuentaResponse aResponse(Map<String, Object> usuario, String rol) {
+    private CuentaResponse aResponse(Map<String, Object> usuario, String rol, Sede sede) {
         Object creado = usuario.get("createdTimestamp");
         return CuentaResponse.builder()
                 .id(texto(usuario, "id"))
@@ -113,6 +141,7 @@ public class CuentaServiceImpl implements CuentaService {
                 .apellidos(texto(usuario, "lastName"))
                 .correo(texto(usuario, "email"))
                 .rol(rol)
+                .sede(sede == null ? null : sede.name())
                 .activa(Boolean.TRUE.equals(usuario.get("enabled")))
                 .creadaEn(creado instanceof Number n ? Instant.ofEpochMilli(n.longValue()) : null)
                 .build();

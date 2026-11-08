@@ -4,11 +4,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import pe.edu.upeu.bomerp.premios.premiacion.dto.ActaPremiacionResponse;
 import pe.edu.upeu.bomerp.premios.premiacion.dto.ActaPremiacionRequest;
 import pe.edu.upeu.bomerp.premios.premiacion.service.ActaPremiacionService;
+import pe.edu.upeu.bomerp.sedes.Sede;
+import pe.edu.upeu.bomerp.sedes.SedeService;
 
 import java.util.List;
 
@@ -19,25 +23,29 @@ import java.util.List;
 public class ActaPremiacionController {
 
     private final ActaPremiacionService service;
+    private final SedeService sedeService;
 
     @GetMapping
-    public List<ActaPremiacionResponse> listar() {
-        return service.listar();
+    public List<ActaPremiacionResponse> listar(@RequestParam(required = false) Sede sede,
+                                               @AuthenticationPrincipal Jwt jwt) {
+        return service.listar(sedeService.alcance(jwt, sede).orElse(null));
     }
 
     @GetMapping("/{id}")
-    public ActaPremiacionResponse obtener(@PathVariable Long id) {
-        return service.obtener(id);
+    public ActaPremiacionResponse obtener(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        return service.obtener(id, sedeService.alcance(jwt, null).orElse(null));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ActaPremiacionResponse emitir(@Valid @RequestBody ActaPremiacionRequest request) {
-        return service.emitir(request);
+    public ActaPremiacionResponse emitir(@Valid @RequestBody ActaPremiacionRequest request,
+                                         @RequestParam(required = false) Sede sede,
+                                         @AuthenticationPrincipal Jwt jwt) {
+        return service.emitir(request, sedeService.requerida(jwt, sede));
     }
 
     @PatchMapping("/{id}/anular")
-    public ActaPremiacionResponse anular(@PathVariable Long id) {
-        return service.anular(id);
+    public ActaPremiacionResponse anular(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        return service.anular(id, sedeService.alcance(jwt, null).orElse(null));
     }
 }

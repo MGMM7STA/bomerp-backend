@@ -19,11 +19,17 @@ import pe.edu.upeu.bomerp.premios.premiacion.repository.ActaPremiacionRepository
 import pe.edu.upeu.bomerp.premios.premiacion.repository.DetallePremiacionRepository;
 import pe.edu.upeu.bomerp.premios.premio.dto.PremioResponse;
 import pe.edu.upeu.bomerp.premios.premio.service.PremioService;
+import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
+import pe.edu.upeu.bomerp.campanias.campania.service.CampaniaService;
+import pe.edu.upeu.bomerp.participacion.estudiante.dto.EstudianteResponse;
+import pe.edu.upeu.bomerp.participacion.estudiante.service.EstudianteService;
+import pe.edu.upeu.bomerp.sedes.Sede;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +45,13 @@ public class ActaPremiacionService {
      * Se comunica con el módulo premios mediante PremioService.
      */
     private final PremioService premioService;
+    private final CampaniaService campaniaService;
+    private final EstudianteService estudianteService;
 
 
     @Transactional
     public ActaPremiacionResponse emitir(
-            ActaPremiacionRequest request) {
+            ActaPremiacionRequest request, Sede sede) {
 
         // 1. Validar fechas
         if (request.getFechaFinPeriodo()
@@ -56,10 +64,32 @@ public class ActaPremiacionService {
         }
 
 
+        CampaniaResponse campania = campaniaService.obtener(request.getCampaniaId());
+        if (!campania.getSedes().contains(sede.name())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "La campaña " + campania.getNombre() + " no se realiza en esta sede"
+            );
+        }
+
+        Set<Long> estudiantesSede = estudianteService.listar(sede)
+                .stream()
+                .map(EstudianteResponse::getId)
+                .collect(Collectors.toSet());
+        for (DetallePremiacionRequest detalle : request.getDetalles()) {
+            if (!estudiantesSede.contains(detalle.getEstudianteId())) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Uno de los ganadores no pertenece a esta sede"
+                );
+            }
+        }
+
         // 2. Verificar que no exista otra acta
         boolean existe = actaRepository
-                .existsByCampaniaIdAndFechaInicioPeriodoAndFechaFinPeriodo(
+                .existsByCampaniaIdAndSedeAndFechaInicioPeriodoAndFechaFinPeriodo(
                         request.getCampaniaId(),
+                        sede,
                         request.getFechaInicioPeriodo(),
                         request.getFechaFinPeriodo()
                 );
@@ -93,6 +123,7 @@ public class ActaPremiacionService {
         ActaPremiacion acta = new ActaPremiacion();
 
         acta.setCampaniaId(request.getCampaniaId());
+        acta.setSede(sede);
         acta.setFechaInicioPeriodo(
                 request.getFechaInicioPeriodo()
         );
@@ -194,9 +225,11 @@ public class ActaPremiacionService {
 
 
     @Transactional(readOnly = true)
-    public List<ActaPremiacionResponse> listar() {
+    public List<ActaPremiacionResponse> listar(Sede sede) {
 
-        return actaRepository.findAll()
+        return (sede == null
+                ? actaRepository.findAllByOrderByFechaEmisionDesc()
+                : actaRepository.findBySedeOrderByFechaEmisionDesc(sede))
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
@@ -204,10 +237,11 @@ public class ActaPremiacionService {
 
 
     @Transactional(readOnly = true)
-    public ActaPremiacionResponse obtener(Long id) {
+    public ActaPremiacionResponse obtener(Long id, Sede sede) {
 
         ActaPremiacion acta =
                 actaRepository.findById(id)
+                        .filter(encontrada -> sede == null || sede == encontrada.getSede())
                         .orElseThrow(() ->
                                 new ResponseStatusException(
                                         HttpStatus.NOT_FOUND,
@@ -220,10 +254,11 @@ public class ActaPremiacionService {
 
 
     @Transactional
-    public ActaPremiacionResponse anular(Long id) {
+    public ActaPremiacionResponse anular(Long id, Sede sede) {
 
         ActaPremiacion acta =
                 actaRepository.findById(id)
+                        .filter(encontrada -> sede == null || sede == encontrada.getSede())
                         .orElseThrow(() ->
                                 new ResponseStatusException(
                                         HttpStatus.NOT_FOUND,

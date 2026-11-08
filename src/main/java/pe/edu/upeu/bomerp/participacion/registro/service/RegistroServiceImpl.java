@@ -1,5 +1,6 @@
 package pe.edu.upeu.bomerp.participacion.registro.service;
 
+import pe.edu.upeu.bomerp.sedes.Sede;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -55,20 +56,20 @@ public class RegistroServiceImpl implements RegistroService {
     @Transactional(readOnly = true)
     public List<RegistroResponse> buscar(EstadoRegistro estado, Long estudianteId,
                                          LocalDateTime desde, LocalDateTime hasta,
-                                         String ordenarPor, String direccion) {
+                                         String ordenarPor, String direccion, Sede sede) {
         Sort sort = construirOrden(ordenarPor, direccion);
-        return registroRepository.buscar(estado, estudianteId, desde, hasta, sort)
+        return registroRepository.buscar(estado, estudianteId, desde, hasta, sede, sort)
                 .stream().map(registroMapper::toResponse).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public RegistroReporte reporte(EstadoRegistro estado, Long estudianteId,
-                                   LocalDateTime desde, LocalDateTime hasta) {
-        RegistroAgregado agregado = registroRepository.agregados(estado, estudianteId, desde, hasta);
+                                   LocalDateTime desde, LocalDateTime hasta, Sede sede) {
+        RegistroAgregado agregado = registroRepository.agregados(estado, estudianteId, desde, hasta, sede);
         Sort sort = Sort.by(Sort.Direction.DESC, "fecha");
         List<RegistroResumen> registros =
-                registroRepository.buscarResumen(estado, estudianteId, desde, hasta, sort);
+                registroRepository.buscarResumen(estado, estudianteId, desde, hasta, sede, sort);
         return new RegistroReporte(agregado, registros);
     }
 
@@ -82,15 +83,16 @@ public class RegistroServiceImpl implements RegistroService {
 
     @Override
     @Transactional
-    public RegistroResponse crear(RegistroRequest request, Long estudianteId) {
-        return crear(request, estudianteId, Map.of());
+    public RegistroResponse crear(RegistroRequest request, Long estudianteId, Sede sede) {
+        return crear(request, estudianteId, sede, Map.of());
     }
 
     @Override
     @Transactional
-    public RegistroResponse crear(RegistroRequest request, Long estudianteId, Map<Integer, MultipartFile> fotos) {
+    public RegistroResponse crear(RegistroRequest request, Long estudianteId, Sede sede,
+                                  Map<Integer, MultipartFile> fotos) {
         fotos.values().forEach(fotoEvidenciaService::verificar);
-        CampaniaResponse campania = campaniaService.obtenerActiva();
+        CampaniaResponse campania = campaniaService.obtenerActiva(sede);
         LocalDate hoy = LocalDate.now();
 
         RegistroParticipacion registro = new RegistroParticipacion();
@@ -98,6 +100,7 @@ public class RegistroServiceImpl implements RegistroService {
         registro.setCampaniaId(campania.getId());
         registro.setFecha(LocalDateTime.now());
         registro.setEstado(EstadoRegistro.ENVIADO);
+        registro.setSede(sede);
 
         BigDecimal puntajeTotal = BigDecimal.ZERO;
         int totalEvidencias = 0;

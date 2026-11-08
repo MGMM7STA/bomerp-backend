@@ -1,5 +1,6 @@
 package pe.edu.upeu.bomerp.participacion.registro.entity;
 
+import pe.edu.upeu.bomerp.sedes.Sede;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,6 +58,10 @@ public class RegistroParticipacion {
 
     @Column(name = "FECHA_REVISION")
     private LocalDateTime fechaRevision;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SEDE", length = 10)
+    private Sede sede;
 
     @OneToMany(mappedBy = "registro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleEvidencia> detalles = new ArrayList<>();

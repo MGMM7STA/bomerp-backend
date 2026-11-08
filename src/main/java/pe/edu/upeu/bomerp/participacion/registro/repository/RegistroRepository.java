@@ -9,6 +9,7 @@ import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroAgregado;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroResumen;
 import pe.edu.upeu.bomerp.participacion.registro.entity.EstadoRegistro;
 import pe.edu.upeu.bomerp.participacion.registro.entity.RegistroParticipacion;
+import pe.edu.upeu.bomerp.sedes.Sede;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,11 +31,13 @@ public interface RegistroRepository extends JpaRepository<RegistroParticipacion,
           AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
           AND (:desde IS NULL OR r.fecha >= :desde)
           AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
         """)
     List<RegistroParticipacion> buscar(@Param("estado") EstadoRegistro estado,
                                        @Param("estudianteId") Long estudianteId,
                                        @Param("desde") LocalDateTime desde,
                                        @Param("hasta") LocalDateTime hasta,
+                                       @Param("sede") Sede sede,
                                        Sort sort);
 
     @Query("""
@@ -45,12 +48,23 @@ public interface RegistroRepository extends JpaRepository<RegistroParticipacion,
           AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
           AND (:desde IS NULL OR r.fecha >= :desde)
           AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
         """)
     List<RegistroResumen> buscarResumen(@Param("estado") EstadoRegistro estado,
                                         @Param("estudianteId") Long estudianteId,
                                         @Param("desde") LocalDateTime desde,
                                         @Param("hasta") LocalDateTime hasta,
+                                        @Param("sede") Sede sede,
                                         Sort sort);
+
+    @Query("""
+        SELECT r.estudianteId, COALESCE(SUM(d.subtotal), 0BD), COALESCE(SUM(d.veces), 0L)
+        FROM RegistroParticipacion r JOIN r.detalles d
+        WHERE d.estado = pe.edu.upeu.bomerp.participacion.registro.entity.EstadoRegistro.VALIDADO
+          AND r.campaniaId = :campaniaId
+        GROUP BY r.estudianteId
+        """)
+    List<Object[]> puntosValidadosPorEstudiante(@Param("campaniaId") Long campaniaId);
 
     @Query("""
         SELECT new pe.edu.upeu.bomerp.participacion.registro.dto.RegistroAgregado(
@@ -60,9 +74,11 @@ public interface RegistroRepository extends JpaRepository<RegistroParticipacion,
           AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
           AND (:desde IS NULL OR r.fecha >= :desde)
           AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
         """)
     RegistroAgregado agregados(@Param("estado") EstadoRegistro estado,
                                @Param("estudianteId") Long estudianteId,
                                @Param("desde") LocalDateTime desde,
-                               @Param("hasta") LocalDateTime hasta);
+                               @Param("hasta") LocalDateTime hasta,
+                               @Param("sede") Sede sede);
 }

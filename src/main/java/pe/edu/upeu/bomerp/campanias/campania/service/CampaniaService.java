@@ -5,14 +5,18 @@ import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import pe.edu.upeu.bomerp.sedes.Sede;
 
 public interface CampaniaService {
 
-    List<CampaniaResponse> listar();
+    List<CampaniaResponse> listar(Sede sede);
 
     CampaniaResponse obtener(Long id);
 
-    CampaniaResponse obtenerActiva();
+    CampaniaResponse obtenerActiva(Sede sede);
+
+    Optional<CampaniaResponse> buscarActiva(Sede sede);
 
     CampaniaResponse crear(CampaniaRequest request);
 
@@ -26,7 +30,7 @@ public interface CampaniaService {
 
     void liberarCupo(Long campaniaId, Long estudianteId, LocalDate fecha, Integer veces);
 
-    List<HabitoResponse> habitosDeActiva();
+    List<HabitoResponse> habitosDeActiva(Sede sede);
 
     boolean incluyeHabito(Long campaniaId, Long habitoId);
 }

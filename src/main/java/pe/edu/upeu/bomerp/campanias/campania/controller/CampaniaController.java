@@ -1,5 +1,10 @@
 package pe.edu.upeu.bomerp.campanias.campania.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.RequestParam;
+import pe.edu.upeu.bomerp.sedes.Sede;
+import pe.edu.upeu.bomerp.sedes.SedeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,6 +25,7 @@ import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaRequest;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.service.CampaniaService;
 import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
+import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -30,29 +36,39 @@ import java.util.List;
 public class CampaniaController {
 
     private final CampaniaService campaniaService;
+    private final SedeService sedeService;
 
     @Operation(summary = "Lista las campanias")
     @GetMapping
-    public ResponseEntity<List<CampaniaResponse>> listar() {
-        return ResponseEntity.ok(campaniaService.listar());
+    public ResponseEntity<List<CampaniaResponse>> listar(@RequestParam(required = false) Sede sede,
+                                                        @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(campaniaService.listar(sedeService.alcance(jwt, sede).orElse(null)));
     }
 
     @Operation(summary = "Devuelve la campania activa con su cupo diario")
     @GetMapping("/activa")
-    public ResponseEntity<CampaniaResponse> obtenerActiva() {
-        return ResponseEntity.ok(campaniaService.obtenerActiva());
+    public ResponseEntity<CampaniaResponse> obtenerActiva(@RequestParam(required = false) Sede sede,
+                                                          @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(campaniaService.obtenerActiva(sedeService.requerida(jwt, sede)));
     }
 
     @Operation(summary = "Lista los habitos que se practican en la campania activa")
     @GetMapping("/activa/habitos")
-    public ResponseEntity<List<HabitoResponse>> habitosDeActiva() {
-        return ResponseEntity.ok(campaniaService.habitosDeActiva());
+    public ResponseEntity<List<HabitoResponse>> habitosDeActiva(@RequestParam(required = false) Sede sede,
+                                                                @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(campaniaService.habitosDeActiva(sedeService.requerida(jwt, sede)));
     }
 
     @Operation(summary = "Consulta una campania por id")
     @GetMapping("/{id}")
-    public ResponseEntity<CampaniaResponse> obtener(@PathVariable Long id) {
-        return ResponseEntity.ok(campaniaService.obtener(id));
+    public ResponseEntity<CampaniaResponse> obtener(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        CampaniaResponse campania = campaniaService.obtener(id);
+        sedeService.alcance(jwt, null)
+                .filter(sede -> !campania.getSedes().contains(sede.name()))
+                .ifPresent(sede -> {
+                    throw new ResourceNotFoundException("Campania no encontrada con id: " + id);
+                });
+        return ResponseEntity.ok(campania);
     }
 
     @Operation(summary = "Registra una campania")

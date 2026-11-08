@@ -1,5 +1,6 @@
 package pe.edu.upeu.bomerp.cuentas.dto;
 
+import pe.edu.upeu.bomerp.sedes.Sede;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -36,4 +37,6 @@ public class CuentaRequest {
     @NotBlank
     @Size(min = 8, max = 64)
     private String contrasenia;
+
+    private Sede sede;
 }

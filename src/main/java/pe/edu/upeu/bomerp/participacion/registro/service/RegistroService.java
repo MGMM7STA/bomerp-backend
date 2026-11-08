@@ -1,5 +1,6 @@
 package pe.edu.upeu.bomerp.participacion.registro.service;
 
+import pe.edu.upeu.bomerp.sedes.Sede;
 import org.springframework.web.multipart.MultipartFile;
 import pe.edu.upeu.bomerp.participacion.registro.dto.FotoEvidencia;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroReporte;
@@ -16,16 +17,16 @@ public interface RegistroService {
 
     List<RegistroResponse> buscar(EstadoRegistro estado, Long estudianteId,
                                   LocalDateTime desde, LocalDateTime hasta,
-                                  String ordenarPor, String direccion);
+                                  String ordenarPor, String direccion, Sede sede);
 
     RegistroReporte reporte(EstadoRegistro estado, Long estudianteId,
-                            LocalDateTime desde, LocalDateTime hasta);
+                            LocalDateTime desde, LocalDateTime hasta, Sede sede);
 
     RegistroResponse obtener(Long id);
 
-    RegistroResponse crear(RegistroRequest request, Long estudianteId);
+    RegistroResponse crear(RegistroRequest request, Long estudianteId, Sede sede);
 
-    RegistroResponse crear(RegistroRequest request, Long estudianteId, Map<Integer, MultipartFile> fotos);
+    RegistroResponse crear(RegistroRequest request, Long estudianteId, Sede sede, Map<Integer, MultipartFile> fotos);
 
     RegistroResponse anular(Long id);
 

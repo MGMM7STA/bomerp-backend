@@ -1,5 +1,8 @@
 package pe.edu.upeu.bomerp.participacion.estudiante.entity;
 
+import pe.edu.upeu.bomerp.sedes.Sede;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,4 +36,23 @@ public class Estudiante {
 
     @Column(name = "CORREO", length = 150)
     private String correo;
+
+    @Column(name = "CODIGO_UNIVERSITARIO", length = 20)
+    private String codigoUniversitario;
+
+    @Column(name = "DNI", length = 8)
+    private String dni;
+
+    @Column(name = "ESCUELA", length = 120)
+    private String escuela;
+
+    @Column(name = "CICLO")
+    private Integer ciclo;
+
+    @Column(name = "CELULAR", length = 15)
+    private String celular;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SEDE", length = 10)
+    private Sede sede;
 }

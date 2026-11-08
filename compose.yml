@@ -82,6 +82,11 @@ services:
       KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/saludable/protocol/openid-connect/certs
       CORS_ALLOWED_ORIGINS: http://localhost:4300
       EVIDENCIAS_DIR: /app/uploads/evidencias
+      ODOO_URL: ${ODOO_URL}
+      ODOO_DB: ${ODOO_DB}
+      ODOO_LOGIN: ${ODOO_LOGIN}
+      ODOO_API_KEY: ${ODOO_API_KEY}
+      WEB_URL: http://localhost:4300/
       KEYCLOAK_ADMIN_URL: http://keycloak:8080
       KEYCLOAK_BACKEND_SECRET: ${KEYCLOAK_BACKEND_SECRET}
     volumes:

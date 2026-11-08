@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
+import pe.edu.upeu.bomerp.sedes.Sede;
 import lombok.Setter;
 import java.util.List;
 import java.time.LocalDate;
@@ -33,4 +35,7 @@ public class CampaniaRequest {
     private String estado;
 
     private List<Long> habitoIds;
+
+    @NotEmpty(message = "elige al menos una sede")
+    private List<Sede> sedes;
 }

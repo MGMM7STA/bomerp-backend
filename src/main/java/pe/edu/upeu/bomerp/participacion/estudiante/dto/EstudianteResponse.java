@@ -16,4 +16,10 @@ public class EstudianteResponse {
     private String usuario;
     private String nombre;
     private String correo;
+    private String codigoUniversitario;
+    private String dni;
+    private String escuela;
+    private Integer ciclo;
+    private String celular;
+    private String sede;
 }

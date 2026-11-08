@@ -18,6 +18,7 @@ public class RegistroResponse {
     private Long id;
     private Long estudianteId;
     private Long campaniaId;
+    private String sede;
     private LocalDateTime fecha;
     private String estado;
     private Integer totalEvidencias;

@@ -11,6 +11,7 @@ import pe.edu.upeu.bomerp.campanias.campania.entity.Campania;
 public interface CampaniaMapper {
 
     @Mapping(target = "habitoIds", ignore = true)
+    @Mapping(target = "sedes", ignore = true)
     CampaniaResponse toResponse(Campania campania);
 
     @Mapping(target = "id", ignore = true)

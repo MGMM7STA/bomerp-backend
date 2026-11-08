@@ -8,10 +8,12 @@ import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaRequest;
 import pe.edu.upeu.bomerp.campanias.campania.dto.CampaniaResponse;
 import pe.edu.upeu.bomerp.campanias.campania.entity.Campania;
 import pe.edu.upeu.bomerp.campanias.campania.entity.CampaniaHabito;
+import pe.edu.upeu.bomerp.campanias.campania.entity.CampaniaSede;
 import pe.edu.upeu.bomerp.campanias.campania.entity.CupoDiario;
 import pe.edu.upeu.bomerp.campanias.campania.mapper.CampaniaMapper;
 import pe.edu.upeu.bomerp.campanias.campania.repository.CampaniaHabitoRepository;
 import pe.edu.upeu.bomerp.campanias.campania.repository.CampaniaRepository;
+import pe.edu.upeu.bomerp.campanias.campania.repository.CampaniaSedeRepository;
 import pe.edu.upeu.bomerp.campanias.campania.repository.CupoDiarioRepository;
 import pe.edu.upeu.bomerp.campanias.habito.dto.HabitoResponse;
 import pe.edu.upeu.bomerp.campanias.habito.service.HabitoService;
@@ -21,6 +23,8 @@ import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import pe.edu.upeu.bomerp.sedes.Sede;
 
 @Slf4j
 @Service
@@ -34,11 +38,20 @@ public class CampaniaServiceImpl implements CampaniaService {
     private final CampaniaMapper campaniaMapper;
     private final CampaniaHabitoRepository campaniaHabitoRepository;
     private final HabitoService habitoService;
+    private final CampaniaSedeRepository campaniaSedeRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<CampaniaResponse> listar() {
-        return campaniaRepository.findAll().stream().map(this::aResponse).toList();
+    public List<CampaniaResponse> listar(Sede sede) {
+        if (sede == null) {
+            return campaniaRepository.findAll().stream().map(this::aResponse).toList();
+        }
+        return campaniaSedeRepository.findBySede(sede).stream()
+                .map(enlace -> campaniaRepository.findById(enlace.getCampaniaId()))
+                .flatMap(Optional::stream)
+                .sorted(java.util.Comparator.comparing(Campania::getFechaInicio).reversed())
+                .map(this::aResponse)
+                .toList();
     }
 
     @Override
@@ -49,10 +62,15 @@ public class CampaniaServiceImpl implements CampaniaService {
 
     @Override
     @Transactional(readOnly = true)
-    public CampaniaResponse obtenerActiva() {
-        Campania campania = campaniaRepository.findFirstByEstado(ACTIVA)
-                .orElseThrow(() -> new ResourceNotFoundException("No hay ninguna campania activa"));
-        return aResponse(campania);
+    public CampaniaResponse obtenerActiva(Sede sede) {
+        return buscarActiva(sede).orElseThrow(
+                () -> new ResourceNotFoundException("No hay una campania activa en la sede " + nombreSede(sede)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<CampaniaResponse> buscarActiva(Sede sede) {
+        return activaEntidad(sede).map(this::aResponse);
     }
 
     @Override
@@ -64,6 +82,7 @@ public class CampaniaServiceImpl implements CampaniaService {
         log.info("Creando campania nombre={} estado={}", request.getNombre(), request.getEstado());
         Campania guardada = campaniaRepository.save(campania);
         sincronizarHabitos(guardada.getId(), request.getHabitoIds());
+        sincronizarSedes(guardada.getId(), request.getSedes());
         return aResponse(guardada);
     }
 
@@ -77,6 +96,7 @@ public class CampaniaServiceImpl implements CampaniaService {
         log.info("Actualizando campania id={} estado={}", id, request.getEstado());
         Campania guardada = campaniaRepository.save(campania);
         sincronizarHabitos(guardada.getId(), request.getHabitoIds());
+        sincronizarSedes(guardada.getId(), request.getSedes());
         return aResponse(guardada);
     }
 
@@ -135,9 +155,9 @@ public class CampaniaServiceImpl implements CampaniaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<HabitoResponse> habitosDeActiva() {
-        Campania activa = campaniaRepository.findFirstByEstado(ACTIVA)
-                .orElseThrow(() -> new ResourceNotFoundException("No hay ninguna campania activa"));
+    public List<HabitoResponse> habitosDeActiva(Sede sede) {
+        Campania activa = activaEntidad(sede).orElseThrow(
+                () -> new ResourceNotFoundException("No hay una campania activa en la sede " + nombreSede(sede)));
         return campaniaHabitoRepository.findByCampaniaId(activa.getId()).stream()
                 .map(enlace -> habitoService.obtener(enlace.getHabitoId()))
                 .filter(habito -> Integer.valueOf(1).equals(habito.getActivo()))
@@ -165,11 +185,43 @@ public class CampaniaServiceImpl implements CampaniaService {
         }
     }
 
+    private void sincronizarSedes(Long campaniaId, List<Sede> sedes) {
+        campaniaSedeRepository.deleteByCampaniaId(campaniaId);
+        campaniaSedeRepository.flush();
+        for (Sede sede : new LinkedHashSet<>(sedes)) {
+            CampaniaSede enlace = new CampaniaSede();
+            enlace.setCampaniaId(campaniaId);
+            enlace.setSede(sede);
+            campaniaSedeRepository.save(enlace);
+        }
+    }
+
+    private Optional<Campania> activaEntidad(Sede sede) {
+        return campaniaSedeRepository.findBySede(sede).stream()
+                .map(enlace -> campaniaRepository.findById(enlace.getCampaniaId()))
+                .flatMap(Optional::stream)
+                .filter(campania -> ACTIVA.equals(campania.getEstado()))
+                .findFirst();
+    }
+
+    private List<Sede> sedesDe(Long campaniaId) {
+        return campaniaSedeRepository.findByCampaniaId(campaniaId).stream()
+                .map(CampaniaSede::getSede)
+                .sorted()
+                .toList();
+    }
+
+    private String nombreSede(Sede sede) {
+        String nombre = sede.name().toLowerCase();
+        return Character.toUpperCase(nombre.charAt(0)) + nombre.substring(1);
+    }
+
     private CampaniaResponse aResponse(Campania campania) {
         CampaniaResponse respuesta = campaniaMapper.toResponse(campania);
         respuesta.setHabitoIds(campaniaHabitoRepository.findByCampaniaId(campania.getId()).stream()
                 .map(CampaniaHabito::getHabitoId)
                 .toList());
+        respuesta.setSedes(sedesDe(campania.getId()).stream().map(Enum::name).toList());
         return respuesta;
     }
 
@@ -185,13 +237,15 @@ public class CampaniaServiceImpl implements CampaniaService {
         if (!ACTIVA.equals(request.getEstado())) {
             return;
         }
-        campaniaRepository.findFirstByEstado(ACTIVA)
-                .filter(otra -> idActual == null || !otra.getId().equals(idActual))
-                .ifPresent(otra -> {
-                    throw new ReferenciaEnUsoException(
-                            "Ya existe una campania ACTIVA: '" + otra.getNombre()
-                                    + "' (id " + otra.getId() + "). Cierrela antes de activar otra.");
-                });
+        for (Sede sede : new LinkedHashSet<>(request.getSedes())) {
+            activaEntidad(sede)
+                    .filter(otra -> idActual == null || !otra.getId().equals(idActual))
+                    .ifPresent(otra -> {
+                        throw new ReferenciaEnUsoException(
+                                "La sede " + nombreSede(sede) + " ya tiene una campania activa: '" + otra.getNombre()
+                                        + "'. Cierrala antes de activar otra en esa sede.");
+                    });
+        }
     }
 
     private Campania buscarOFallar(Long id) {

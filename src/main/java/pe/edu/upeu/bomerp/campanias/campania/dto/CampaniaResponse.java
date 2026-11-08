@@ -21,4 +21,5 @@ public class CampaniaResponse {
     private Integer maxEvidenciasDia;
     private String estado;
     private List<Long> habitoIds;
+    private List<String> sedes;
 }

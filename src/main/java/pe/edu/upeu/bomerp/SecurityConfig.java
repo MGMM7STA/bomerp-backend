@@ -56,10 +56,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/api/v1/solicitudes-cuenta", "/api/v1/solicitudes-cuenta/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/cuentas", "/api/v1/cuentas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTAS_CAMPANIAS).authenticated()
                         .requestMatchers(RUTAS_CAMPANIAS).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTA_ESTUDIANTES + "/yo").hasRole("ESTUDIANTE")
+                        .requestMatchers(HttpMethod.GET, RUTA_ESTUDIANTES + "/ranking").authenticated()
                         .requestMatchers(RUTA_ESTUDIANTES, RUTA_ESTUDIANTES + "/**").hasAnyRole("COORDINADOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, RUTA_REGISTROS + "/resumen").hasAnyRole("COORDINADOR", "ADMIN")
                         .requestMatchers(HttpMethod.PATCH, RUTA_REGISTROS + "/*/anular",

@@ -1,5 +1,6 @@
 package pe.edu.upeu.bomerp.cuentas.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -11,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 import pe.edu.upeu.bomerp.exception.ReferenciaEnUsoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.exception.ServicioExternoException;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+@Slf4j
 @Component
 public class KeycloakAdminCliente {
 
@@ -121,6 +124,26 @@ public class KeycloakAdminCliente {
                 .body(Map.of("type", "password", "value", contrasenia, "temporary", true))
                 .retrieve()
                 .toBodilessEntity());
+    }
+
+    public boolean enviarCorreoContrasenia(String id, String clienteWeb, String urlRetorno) {
+        try {
+            cliente.put()
+                    .uri(uri -> uri.path("/users/{id}/execute-actions-email")
+                            .queryParam("lifespan", 259200)
+                            .queryParam("client_id", clienteWeb)
+                            .queryParam("redirect_uri", urlRetorno)
+                            .build(id))
+                    .header("Authorization", bearer())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(List.of("UPDATE_PASSWORD"))
+                    .retrieve()
+                    .toBodilessEntity();
+            return true;
+        } catch (RestClientException e) {
+            log.warn("Keycloak no pudo enviar el correo a la cuenta {}: {}", id, e.getMessage());
+            return false;
+        }
     }
 
     public Map<String, Object> rol(String nombre) {

@@ -1,6 +1,7 @@
 package pe.edu.upeu.bomerp.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -91,5 +92,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleServicioExterno(ServicioExternoException ex) {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                 .body(cuerpo(HttpStatus.BAD_GATEWAY, "Bad Gateway", ex.getMessage()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleSinAcceso(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(cuerpo(HttpStatus.FORBIDDEN, "Forbidden", ex.getMessage()));
     }
 }
