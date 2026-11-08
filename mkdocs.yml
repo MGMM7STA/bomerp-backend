@@ -30,6 +30,7 @@ theme:
 nav:
   - Inicio: index.md
   - Producto Unidad 1: proyecto-integrador/u1/lp2-demo.md
+  - Producto Unidad 3: proyecto-integrador/u3/lp2-producto.md
   - Guia de ejecucion: guia-ejecucion.md
 
 markdown_extensions:

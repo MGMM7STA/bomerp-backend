@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import pe.edu.upeu.bomerp.auditoria.AuditoriaService;
 import pe.edu.upeu.bomerp.campanias.categoriahabito.dto.CategoriaHabitoRequest;
 import pe.edu.upeu.bomerp.campanias.categoriahabito.dto.CategoriaHabitoResponse;
 import pe.edu.upeu.bomerp.campanias.categoriahabito.service.CategoriaHabitoService;
@@ -30,6 +33,7 @@ import java.util.List;
 public class CategoriaHabitoController {
 
     private final CategoriaHabitoService categoriaHabitoService;
+    private final AuditoriaService auditoria;
 
     @Operation(summary = "Lista las categorias de habito")
     @GetMapping
@@ -48,21 +52,34 @@ public class CategoriaHabitoController {
     @Operation(summary = "Registra una categoria de habito")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriaHabitoResponse crear(@Valid @RequestBody CategoriaHabitoRequest request) {
-        return categoriaHabitoService.crear(request);
+    public CategoriaHabitoResponse crear(@Valid @RequestBody CategoriaHabitoRequest request,
+                                         @AuthenticationPrincipal Jwt jwt) {
+        CategoriaHabitoResponse categoria = categoriaHabitoService.crear(request);
+        auditoria.registrar(jwt, "CREAR_CATEGORIA_HABITO", "CATEGORIA_HABITO", categoria.getId(),
+                categoria.getNombre(), null);
+        return categoria;
     }
 
     @Operation(summary = "Actualiza una categoria de habito")
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaHabitoResponse> actualizar(@PathVariable Long id,
-                                                             @Valid @RequestBody CategoriaHabitoRequest request) {
-        return ResponseEntity.ok(categoriaHabitoService.actualizar(id, request));
+                                                             @Valid @RequestBody CategoriaHabitoRequest request,
+                                                             @AuthenticationPrincipal Jwt jwt) {
+        CategoriaHabitoResponse antes = categoriaHabitoService.obtener(id);
+        CategoriaHabitoResponse categoria = categoriaHabitoService.actualizar(id, request);
+        auditoria.registrar(jwt, "EDITAR_CATEGORIA_HABITO", "CATEGORIA_HABITO", id,
+                antes.getNombre().equals(categoria.getNombre())
+                        ? categoria.getNombre() + ": descripcion actualizada"
+                        : "Nombre de " + antes.getNombre() + " a " + categoria.getNombre(), null);
+        return ResponseEntity.ok(categoria);
     }
 
     @Operation(summary = "Elimina una categoria de habito sin habitos asociados")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Long id) {
+    public void eliminar(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        CategoriaHabitoResponse categoria = categoriaHabitoService.obtener(id);
         categoriaHabitoService.eliminar(id);
+        auditoria.registrar(jwt, "ELIMINAR_CATEGORIA_HABITO", "CATEGORIA_HABITO", id, categoria.getNombre(), null);
     }
 }
