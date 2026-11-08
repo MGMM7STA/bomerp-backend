@@ -22,6 +22,7 @@ import pe.edu.upeu.bomerp.cuentas.dto.CuentaResponse;
 import pe.edu.upeu.bomerp.cuentas.dto.EstadoCuentaRequest;
 import pe.edu.upeu.bomerp.cuentas.dto.RolRequest;
 import pe.edu.upeu.bomerp.cuentas.service.CuentaService;
+import pe.edu.upeu.bomerp.auditoria.AuditoriaService;
 import java.util.List;
 
 @Tag(name = "Cuentas")
@@ -31,6 +32,7 @@ import java.util.List;
 public class CuentaController {
 
     private final CuentaService cuentaService;
+    private final AuditoriaService auditoria;
 
     @Operation(summary = "Lista las cuentas del realm con su rol y estado")
     @GetMapping
@@ -41,8 +43,11 @@ public class CuentaController {
     @Operation(summary = "Crea una cuenta con contrasenia temporal y su rol")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CuentaResponse crear(@Valid @RequestBody CuentaRequest request) {
-        return cuentaService.crear(request);
+    public CuentaResponse crear(@Valid @RequestBody CuentaRequest request, @AuthenticationPrincipal Jwt jwt) {
+        CuentaResponse cuenta = cuentaService.crear(request);
+        auditoria.registrar(jwt, "CREAR_CUENTA", "CUENTA", cuenta.getUsuario(),
+                cuenta.getNombres() + " " + cuenta.getApellidos() + " como " + cuenta.getRol(), cuenta.getSede());
+        return cuenta;
     }
 
     @Operation(summary = "Cambia el rol de una cuenta")
@@ -50,7 +55,10 @@ public class CuentaController {
     public ResponseEntity<CuentaResponse> cambiarRol(@PathVariable String id,
                                                      @Valid @RequestBody RolRequest request,
                                                      @AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.ok(cuentaService.cambiarRol(id, request.getRol(), request.getSede(), jwt.getSubject()));
+        CuentaResponse cuenta = cuentaService.cambiarRol(id, request.getRol(), request.getSede(), jwt.getSubject());
+        auditoria.registrar(jwt, "CAMBIAR_ROL", "CUENTA", cuenta.getUsuario(),
+                "Ahora es " + cuenta.getRol() + (cuenta.getSede() == null ? "" : " en " + cuenta.getSede()), cuenta.getSede());
+        return ResponseEntity.ok(cuenta);
     }
 
     @Operation(summary = "Activa o desactiva una cuenta sin borrarla")
@@ -58,14 +66,19 @@ public class CuentaController {
     public ResponseEntity<CuentaResponse> cambiarEstado(@PathVariable String id,
                                                         @Valid @RequestBody EstadoCuentaRequest request,
                                                         @AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.ok(cuentaService.cambiarEstado(id, request.getActiva(), jwt.getSubject()));
+        CuentaResponse cuenta = cuentaService.cambiarEstado(id, request.getActiva(), jwt.getSubject());
+        auditoria.registrar(jwt, Boolean.TRUE.equals(request.getActiva()) ? "ACTIVAR_CUENTA" : "DESACTIVAR_CUENTA",
+                "CUENTA", cuenta.getUsuario(), cuenta.getNombres() + " " + cuenta.getApellidos(), cuenta.getSede());
+        return ResponseEntity.ok(cuenta);
     }
 
     @Operation(summary = "Pone una contrasenia temporal nueva")
     @PatchMapping("/{id}/contrasenia")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void restablecerContrasenia(@PathVariable String id,
-                                       @Valid @RequestBody ContraseniaRequest request) {
+                                       @Valid @RequestBody ContraseniaRequest request,
+                                       @AuthenticationPrincipal Jwt jwt) {
         cuentaService.restablecerContrasenia(id, request.getContrasenia());
+        auditoria.registrar(jwt, "RESTABLECER_CONTRASENIA", "CUENTA", id, "Contrasenia temporal nueva", null);
     }
 }

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +37,9 @@ public class HabitoController {
     public ResponseEntity<List<HabitoResponse>> listar(
             @RequestParam(required = false) Long categoriaId) {
         log.info("Consultando habitos categoriaId={}", categoriaId);
-        return ResponseEntity.ok(habitoService.listar(categoriaId));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noCache().cachePrivate())
+                .body(habitoService.listar(categoriaId));
     }
 
     @Operation(summary = "Consulta un habito por id, con su categoria")

@@ -33,10 +33,13 @@ import pe.edu.upeu.bomerp.participacion.registro.dto.RechazoRequest;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroReporte;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroRequest;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroResponse;
+import pe.edu.upeu.bomerp.participacion.registro.dto.PaginaResponse;
+import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroTotales;
 import pe.edu.upeu.bomerp.participacion.registro.entity.EstadoRegistro;
 import pe.edu.upeu.bomerp.participacion.registro.service.RegistroService;
 import pe.edu.upeu.bomerp.sedes.Sede;
 import pe.edu.upeu.bomerp.sedes.SedeService;
+import pe.edu.upeu.bomerp.auditoria.AuditoriaService;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +56,7 @@ public class RegistroController {
     private final RegistroService registroService;
     private final EstudianteService estudianteService;
     private final SedeService sedeService;
+    private final AuditoriaService auditoria;
 
     @Operation(summary = "Consulta registros con filtros combinados y ordenamiento opcionales")
     @GetMapping
@@ -74,6 +78,40 @@ public class RegistroController {
                 estado, estudianteId, desde, hasta, ordenarPor, direccion);
         return ResponseEntity.ok(
                 registroService.buscar(estado, estudianteId, desde, hasta, ordenarPor, direccion, alcance));
+    }
+
+    @Operation(summary = "Consulta registros paginados conservando filtros y ordenamiento")
+    @GetMapping("/pagina")
+    public ResponseEntity<PaginaResponse<RegistroResponse>> buscarPagina(
+            @RequestParam(required = false) EstadoRegistro estado,
+            @RequestParam(required = false) Long estudianteId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta,
+            @RequestParam(defaultValue = "fecha") String ordenarPor,
+            @RequestParam(defaultValue = "DESC") String direccion,
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanio,
+            @RequestParam(required = false) Sede sede,
+            @AuthenticationPrincipal Jwt jwt,
+            Authentication autenticacion) {
+        if (!esCoordinacion(autenticacion)) {
+            estudianteId = estudianteService.resolver(jwt).getId();
+        }
+        return ResponseEntity.ok(registroService.buscarPagina(estado, estudianteId, desde, hasta, ordenarPor,
+                direccion, sedeService.alcance(jwt, sede).orElse(null), pagina, tamanio));
+    }
+
+    @Operation(summary = "Totales calculados en Oracle sobre todos los registros que cumplen los filtros")
+    @GetMapping("/totales")
+    public ResponseEntity<RegistroTotales> totales(
+            @RequestParam(required = false) EstadoRegistro estado,
+            @RequestParam(required = false) Long estudianteId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta,
+            @RequestParam(required = false) Sede sede,
+            @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(registroService.totales(estado, estudianteId, desde, hasta,
+                sedeService.alcance(jwt, sede).orElse(null)));
     }
 
     @Operation(summary = "Genera un reporte de participacion: agregados y detalle resumido")
@@ -103,7 +141,10 @@ public class RegistroController {
     public RegistroResponse crear(@Valid @RequestBody RegistroRequest request,
                                   @AuthenticationPrincipal Jwt jwt) {
         Long estudianteId = estudianteService.resolver(jwt).getId();
-        return registroService.crear(request, estudianteId, sedeService.requerida(jwt, null));
+        RegistroResponse creado = registroService.crear(request, estudianteId, sedeService.requerida(jwt, null));
+        auditar(jwt, "REGISTRAR_PARTICIPACION", creado, creado.getTotalEvidencias() + " evidencias, "
+                + creado.getPuntajeTotal() + " pts");
+        return creado;
     }
 
     @Operation(summary = "Registra la participacion con una foto por evidencia (partes foto-0, foto-1...)")
@@ -120,7 +161,10 @@ public class RegistroController {
             }
         });
         log.info("Registrando participacion estudianteId={} con {} fotos", estudianteId, fotos.size());
-        return registroService.crear(request, estudianteId, sedeService.requerida(jwt, null), fotos);
+        RegistroResponse creado = registroService.crear(request, estudianteId, sedeService.requerida(jwt, null), fotos);
+        auditar(jwt, "REGISTRAR_PARTICIPACION", creado, creado.getTotalEvidencias() + " evidencias, "
+                + creado.getPuntajeTotal() + " pts");
+        return creado;
     }
 
     @Operation(summary = "Devuelve la foto de una evidencia")
@@ -145,7 +189,9 @@ public class RegistroController {
                                                            Authentication autenticacion) {
         visible(id, jwt, autenticacion);
         log.info("Validando evidencia id={} del registro id={}", detalleId, id);
-        return ResponseEntity.ok(registroService.validarDetalle(id, detalleId, nombreDe(jwt)));
+        RegistroResponse registro = registroService.validarDetalle(id, detalleId, nombreDe(jwt));
+        auditar(jwt, "VALIDAR_EVIDENCIA", registro, "Evidencia #" + detalleId + " del registro #" + id);
+        return ResponseEntity.ok(registro);
     }
 
     @Operation(summary = "Rechaza una evidencia del registro, con motivo, y devuelve su cupo")
@@ -157,8 +203,10 @@ public class RegistroController {
                                                             Authentication autenticacion) {
         visible(id, jwt, autenticacion);
         log.info("Rechazando evidencia id={} del registro id={}", detalleId, id);
-        return ResponseEntity.ok(
-                registroService.rechazarDetalle(id, detalleId, request.getMotivo(), nombreDe(jwt)));
+        RegistroResponse registro = registroService.rechazarDetalle(id, detalleId, request.getMotivo(), nombreDe(jwt));
+        auditar(jwt, "RECHAZAR_EVIDENCIA", registro,
+                "Evidencia #" + detalleId + " del registro #" + id + ". Motivo: " + request.getMotivo());
+        return ResponseEntity.ok(registro);
     }
 
     @Operation(summary = "Anula un registro y devuelve el cupo diario consumido por sus evidencias")
@@ -168,7 +216,9 @@ public class RegistroController {
                                                    Authentication autenticacion) {
         visible(id, jwt, autenticacion);
         log.info("Anulando registro id={}", id);
-        return ResponseEntity.ok(registroService.anular(id));
+        RegistroResponse registro = registroService.anular(id);
+        auditar(jwt, "ANULAR_REGISTRO", registro, "Se devolvio el cupo de " + registro.getTotalEvidencias() + " evidencias");
+        return ResponseEntity.ok(registro);
     }
 
     @Operation(summary = "Valida un registro enviado: sus evidencias pasan a sumar puntaje")
@@ -177,7 +227,9 @@ public class RegistroController {
                                                     Authentication autenticacion) {
         visible(id, jwt, autenticacion);
         log.info("Validando registro id={}", id);
-        return ResponseEntity.ok(registroService.validar(id, nombreDe(jwt)));
+        RegistroResponse registro = registroService.validar(id, nombreDe(jwt));
+        auditar(jwt, "VALIDAR_REGISTRO", registro, "Registro completo validado");
+        return ResponseEntity.ok(registro);
     }
 
     @Operation(summary = "Rechaza un registro enviado, con motivo, y devuelve su cupo diario")
@@ -188,7 +240,9 @@ public class RegistroController {
                                                      Authentication autenticacion) {
         visible(id, jwt, autenticacion);
         log.info("Rechazando registro id={}", id);
-        return ResponseEntity.ok(registroService.rechazar(id, request.getMotivo(), nombreDe(jwt)));
+        RegistroResponse registro = registroService.rechazar(id, request.getMotivo(), nombreDe(jwt));
+        auditar(jwt, "RECHAZAR_REGISTRO", registro, "Motivo: " + request.getMotivo());
+        return ResponseEntity.ok(registro);
     }
 
     private RegistroResponse visible(Long id, Jwt jwt, Authentication autenticacion) {
@@ -203,6 +257,11 @@ public class RegistroController {
             throw new ResourceNotFoundException("Registro no encontrado: " + id);
         }
         return registro;
+    }
+
+    private void auditar(Jwt jwt, String accion, RegistroResponse registro, String detalle) {
+        auditoria.registrar(jwt, accion, "REGISTRO", registro.getId(),
+                "Estudiante #" + registro.getEstudianteId() + ". " + detalle, registro.getSede());
     }
 
     private boolean esCoordinacion(Authentication autenticacion) {

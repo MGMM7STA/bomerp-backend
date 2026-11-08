@@ -3,6 +3,8 @@ package pe.edu.upeu.bomerp.participacion.registro.repository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroAgregado;
@@ -10,6 +12,7 @@ import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroResumen;
 import pe.edu.upeu.bomerp.participacion.registro.entity.EstadoRegistro;
 import pe.edu.upeu.bomerp.participacion.registro.entity.RegistroParticipacion;
 import pe.edu.upeu.bomerp.sedes.Sede;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -81,4 +84,61 @@ public interface RegistroRepository extends JpaRepository<RegistroParticipacion,
                                @Param("desde") LocalDateTime desde,
                                @Param("hasta") LocalDateTime hasta,
                                @Param("sede") Sede sede);
+
+    @Query(value = """
+        SELECT r FROM RegistroParticipacion r
+        WHERE (:estado IS NULL OR r.estado = :estado)
+          AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
+          AND (:desde IS NULL OR r.fecha >= :desde)
+          AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
+        """,
+            countQuery = """
+        SELECT COUNT(r) FROM RegistroParticipacion r
+        WHERE (:estado IS NULL OR r.estado = :estado)
+          AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
+          AND (:desde IS NULL OR r.fecha >= :desde)
+          AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
+        """)
+    Page<RegistroParticipacion> buscarPagina(@Param("estado") EstadoRegistro estado,
+                                    @Param("estudianteId") Long estudianteId,
+                                    @Param("desde") LocalDateTime desde,
+                                    @Param("hasta") LocalDateTime hasta,
+                                    @Param("sede") Sede sede,
+                                    Pageable pageable);
+
+    @Query("""
+        SELECT COALESCE(SUM(d.subtotal), 0BD)
+        FROM RegistroParticipacion r JOIN r.detalles d
+        WHERE d.estado = pe.edu.upeu.bomerp.participacion.registro.entity.EstadoRegistro.VALIDADO
+          AND (:estado IS NULL OR r.estado = :estado)
+          AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
+          AND (:desde IS NULL OR r.fecha >= :desde)
+          AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
+        """)
+    BigDecimal puntajeValidado(@Param("estado") EstadoRegistro estado,
+                                    @Param("estudianteId") Long estudianteId,
+                                    @Param("desde") LocalDateTime desde,
+                                    @Param("hasta") LocalDateTime hasta,
+                                    @Param("sede") Sede sede);
+
+    @Query("""
+        SELECT d.nombreHabito, SUM(d.veces)
+        FROM RegistroParticipacion r JOIN r.detalles d
+        WHERE (:estado IS NULL OR r.estado = :estado)
+          AND (:estudianteId IS NULL OR r.estudianteId = :estudianteId)
+          AND (:desde IS NULL OR r.fecha >= :desde)
+          AND (:hasta IS NULL OR r.fecha <= :hasta)
+          AND (:sede IS NULL OR r.sede = :sede)
+        GROUP BY d.nombreHabito
+        ORDER BY SUM(d.veces) DESC
+        """)
+    List<Object[]> habitosMasRegistrados(@Param("estado") EstadoRegistro estado,
+                                    @Param("estudianteId") Long estudianteId,
+                                    @Param("desde") LocalDateTime desde,
+                                    @Param("hasta") LocalDateTime hasta,
+                                    @Param("sede") Sede sede,
+                                         Pageable pageable);
 }

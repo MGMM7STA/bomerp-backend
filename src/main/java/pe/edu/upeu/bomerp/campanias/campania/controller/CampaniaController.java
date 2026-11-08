@@ -5,6 +5,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RequestParam;
 import pe.edu.upeu.bomerp.sedes.Sede;
 import pe.edu.upeu.bomerp.sedes.SedeService;
+import pe.edu.upeu.bomerp.auditoria.AuditoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,6 +38,7 @@ public class CampaniaController {
 
     private final CampaniaService campaniaService;
     private final SedeService sedeService;
+    private final AuditoriaService auditoria;
 
     @Operation(summary = "Lista las campanias")
     @GetMapping
@@ -74,21 +76,32 @@ public class CampaniaController {
     @Operation(summary = "Registra una campania")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CampaniaResponse crear(@Valid @RequestBody CampaniaRequest request) {
-        return campaniaService.crear(request);
+    public CampaniaResponse crear(@Valid @RequestBody CampaniaRequest request, @AuthenticationPrincipal Jwt jwt) {
+        CampaniaResponse campania = campaniaService.crear(request);
+        auditoria.registrar(jwt, "CREAR_CAMPANIA", "CAMPANIA", campania.getId(), resumen(campania), null);
+        return campania;
     }
 
     @Operation(summary = "Actualiza una campania")
     @PutMapping("/{id}")
     public ResponseEntity<CampaniaResponse> actualizar(@PathVariable Long id,
-                                                      @Valid @RequestBody CampaniaRequest request) {
-        return ResponseEntity.ok(campaniaService.actualizar(id, request));
+                                                      @Valid @RequestBody CampaniaRequest request,
+                                                      @AuthenticationPrincipal Jwt jwt) {
+        CampaniaResponse campania = campaniaService.actualizar(id, request);
+        auditoria.registrar(jwt, "EDITAR_CAMPANIA", "CAMPANIA", campania.getId(), resumen(campania), null);
+        return ResponseEntity.ok(campania);
     }
 
     @Operation(summary = "Elimina una campania sin registros de participacion")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Long id) {
+    public void eliminar(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        CampaniaResponse campania = campaniaService.obtener(id);
         campaniaService.eliminar(id);
+        auditoria.registrar(jwt, "ELIMINAR_CAMPANIA", "CAMPANIA", id, campania.getNombre(), null);
+    }
+
+    private String resumen(CampaniaResponse campania) {
+        return campania.getNombre() + " - " + campania.getEstado() + " - sedes " + String.join(", ", campania.getSedes());
     }
 }

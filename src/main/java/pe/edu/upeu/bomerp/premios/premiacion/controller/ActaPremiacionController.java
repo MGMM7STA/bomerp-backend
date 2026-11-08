@@ -13,6 +13,7 @@ import pe.edu.upeu.bomerp.premios.premiacion.dto.ActaPremiacionRequest;
 import pe.edu.upeu.bomerp.premios.premiacion.service.ActaPremiacionService;
 import pe.edu.upeu.bomerp.sedes.Sede;
 import pe.edu.upeu.bomerp.sedes.SedeService;
+import pe.edu.upeu.bomerp.auditoria.AuditoriaService;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class ActaPremiacionController {
 
     private final ActaPremiacionService service;
     private final SedeService sedeService;
+    private final AuditoriaService auditoria;
 
     @GetMapping
     public List<ActaPremiacionResponse> listar(@RequestParam(required = false) Sede sede,
@@ -41,11 +43,18 @@ public class ActaPremiacionController {
     public ActaPremiacionResponse emitir(@Valid @RequestBody ActaPremiacionRequest request,
                                          @RequestParam(required = false) Sede sede,
                                          @AuthenticationPrincipal Jwt jwt) {
-        return service.emitir(request, sedeService.requerida(jwt, sede));
+        ActaPremiacionResponse acta = service.emitir(request, sedeService.requerida(jwt, sede));
+        auditoria.registrar(jwt, "EMITIR_ACTA", "ACTA_PREMIACION", acta.getId(),
+                acta.getTotalGanadores() + " ganadores, " + acta.getTotalPremiosEntregados()
+                        + " premios descontados del stock", acta.getSede());
+        return acta;
     }
 
     @PatchMapping("/{id}/anular")
     public ActaPremiacionResponse anular(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-        return service.anular(id, sedeService.alcance(jwt, null).orElse(null));
+        ActaPremiacionResponse acta = service.anular(id, sedeService.alcance(jwt, null).orElse(null));
+        auditoria.registrar(jwt, "ANULAR_ACTA", "ACTA_PREMIACION", acta.getId(),
+                acta.getTotalPremiosEntregados() + " premios devueltos al stock", acta.getSede());
+        return acta;
     }
 }

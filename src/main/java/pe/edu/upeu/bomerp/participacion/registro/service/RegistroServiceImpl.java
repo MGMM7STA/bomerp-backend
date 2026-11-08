@@ -2,6 +2,8 @@ package pe.edu.upeu.bomerp.participacion.registro.service;
 
 import pe.edu.upeu.bomerp.sedes.Sede;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import pe.edu.upeu.bomerp.exception.RegistroYaAnuladoException;
 import pe.edu.upeu.bomerp.exception.ResourceNotFoundException;
 import pe.edu.upeu.bomerp.participacion.registro.dto.DetalleEvidenciaRequest;
 import pe.edu.upeu.bomerp.participacion.registro.dto.FotoEvidencia;
+import pe.edu.upeu.bomerp.participacion.registro.dto.PaginaResponse;
+import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroTotales;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroAgregado;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroReporte;
 import pe.edu.upeu.bomerp.participacion.registro.dto.RegistroRequest;
@@ -71,6 +75,33 @@ public class RegistroServiceImpl implements RegistroService {
         List<RegistroResumen> registros =
                 registroRepository.buscarResumen(estado, estudianteId, desde, hasta, sede, sort);
         return new RegistroReporte(agregado, registros);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaginaResponse<RegistroResponse> buscarPagina(EstadoRegistro estado, Long estudianteId,
+                                                         LocalDateTime desde, LocalDateTime hasta,
+                                                         String ordenarPor, String direccion, Sede sede,
+                                                         int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(Math.max(pagina, 0), Math.min(Math.max(tamanio, 1), 100),
+                construirOrden(ordenarPor, direccion));
+        return PaginaResponse.de(
+                registroRepository.buscarPagina(estado, estudianteId, desde, hasta, sede, pageable),
+                registroMapper::toResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RegistroTotales totales(EstadoRegistro estado, Long estudianteId,
+                                   LocalDateTime desde, LocalDateTime hasta, Sede sede) {
+        RegistroAgregado agregado = registroRepository.agregados(estado, estudianteId, desde, hasta, sede);
+        BigDecimal validado = registroRepository.puntajeValidado(estado, estudianteId, desde, hasta, sede);
+        List<Object[]> habitos = registroRepository.habitosMasRegistrados(estado, estudianteId, desde, hasta, sede,
+                PageRequest.of(0, 1));
+        String habito = habitos.isEmpty() ? null : (String) habitos.get(0)[0];
+        long veces = habitos.isEmpty() ? 0 : ((Number) habitos.get(0)[1]).longValue();
+        return RegistroTotales.de(agregado.getTotalRegistros(), agregado.getEvidenciasTotales(),
+                validado == null ? BigDecimal.ZERO : validado, habito, veces);
     }
 
     @Override
