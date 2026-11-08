@@ -68,7 +68,7 @@ En 5 minutos hubo 15 lecturas de los catálogos candidatos, unos 0.2 segundos de
 
 - `logback-spring.xml`: `pe.edu.upeu.bomerp` en `DEBUG` con el perfil `dev` y en `INFO` con `prod`; Hibernate en `WARN` en `prod`.
 - Actuator: `dev` expone todo; `prod` solo `health,info`, y además la seguridad JWT rechaza cualquier petición sin token.
-- `application-prod.yml` lee conexión, usuario, contraseña e issuer de Keycloak desde variables de entorno. `.env.example` documenta los nombres sin valores reales.
+- `application-prod.yml` y `compose.yml` leen conexiones, usuarios, contraseñas y el secreto del cliente de Keycloak desde variables de entorno. `.env.example` documenta los nombres sin valores; el `.env` real está en `.gitignore`.
 - `environment.prod.ts` reemplaza a `environment.ts` en el build de producción por `fileReplacements`.
 
 ### 2.6 Auditoría
@@ -132,4 +132,5 @@ Al terminar borra todo lo que creó. Resultado: `Tests run: 1, Failures: 0, Erro
 | 08/11/2026 | El reporte sumaba evidencias y puntaje con `.reduce()` en el navegador sobre los registros cargados. Al paginar, los totales habrían mostrado solo la página visible. | Totales calculados en Oracle con `/totales`, independientes de la página |
 | 08/11/2026 | Crear o editar hábitos y premios no quedaba en la auditoría, aunque cambiar el puntaje de un hábito o el stock de un premio afecta puntos y premios. | Auditoría en los cuatro catálogos con valor anterior y nuevo |
 | 08/11/2026 | `categoria-habito-form.ts` imprimía el formulario en la consola en cada tecla, resto de una práctica de clase. | Se eliminaron los `console.log` |
+| 08/11/2026 | `.env.example` (que sí sube a GitHub) tenía la contraseña de la base y el secreto del cliente de Keycloak; `compose.yml` de producción tenía cuatro contraseñas escritas y `application.yml` usaba el secreto como valor por defecto, así que `prod` arrancaba con el secreto de desarrollo si nadie lo configuraba. | `.env.example` solo con nombres, `compose.yml` con `${...}` y el secreto de desarrollo movido a `application-dev.yml` |
 | 08/11/2026 | El panel de coordinación muestra un 404 en consola cuando la sede no tiene campaña activa. | Es la respuesta esperada; el frontend la maneja mostrando "sin campaña activa" |

@@ -26,4 +26,4 @@ bomerp:
       url: ${KEYCLOAK_ADMIN_URL:http://localhost:38080}
       realm: saludable
       client-id: saludable-backend
-      client-secret: ${KEYCLOAK_BACKEND_SECRET:saludable-backend-dev-2026}
+      client-secret: ${KEYCLOAK_BACKEND_SECRET:}
