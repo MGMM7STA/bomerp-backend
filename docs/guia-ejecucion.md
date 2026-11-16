@@ -8,7 +8,7 @@ Cómo levantar el backend desde cero en una máquina limpia. Cada paso indica qu
 |---|---|---|
 | Java JDK | 21 | `java -version` |
 | Docker Desktop | En ejecución | `docker ps` |
-| Node.js | 22 | `node -v` |
+| Node.js | 22.22.3, o 24.15 en adelante (lo exige Angular 22) | `node -v` |
 | Git | Cualquiera reciente | `git --version` |
 
 Maven no hace falta instalarlo: el proyecto trae el wrapper `mvnw`.
@@ -55,6 +55,8 @@ Get-Content sql\S16_solicitudes_cuenta.sql | docker exec -i bomerp-oracle sqlplu
 Get-Content sql\S17_sedes_y_odoo.sql | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
 Get-Content sql\S19_auditoria.sql | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
 Get-Content sql\S20_integridad_referencial.sql | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
+Get-Content sql\S21_plsql_y_roles.sql | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
+Get-Content sql\S22_particion_registros.sql | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
 ```
 
 | Orden | Script | Qué crea |
@@ -66,10 +68,35 @@ Get-Content sql\S20_integridad_referencial.sql | docker exec -i bomerp-oracle sq
 | 5 | `S17_sedes_y_odoo.sql` | Sede de cada usuario, sedes por campaña y el enlace con Odoo. |
 | 6 | `S19_auditoria.sql` | Esquema `BOM_AUDITORIA` y la tabla `EVENTOS`, solo con `SELECT` e `INSERT` para la aplicación. |
 | 7 | `S20_integridad_referencial.sql` | Llaves foráneas que faltaban dentro de un mismo esquema (registro con su estudiante, detalle de acta con su premio) e índices sobre las columnas de esas llaves. |
+| 8 | `S21_plsql_y_roles.sql` | Funciones `OBTENER_PUNTAJE_ESTUDIANTE` y `HABITO_MAS_REGISTRADO`, el trigger que impide modificar o borrar la auditoría y el rol `ROL_REPORTES`. Al final provoca a propósito `ORA-20001` y `ORA-20010` para demostrar las dos reglas. |
+| 9 | `S22_particion_registros.sql` | Particiona `REGISTROS` por mes con `INTERVAL`, sin perder datos, actualiza las estadísticas y muestra el plan de ejecución. |
 
 `S18_reinicio_datos.sql` **no** forma parte de la instalación: borra los datos del proyecto para empezar de cero.
 
 Si `S12_base_completa.sql` responde `ORA-01920`, los esquemas ya existían: la base ya estaba creada.
+
+### Si la máquina ya tenía la base
+
+El volumen de Docker conserva la base aunque se apague el contenedor. Para saber qué scripts faltan, esta consulta cuenta las tablas de cada esquema del proyecto:
+
+```powershell
+"SELECT OWNER, COUNT(*) FROM DBA_TABLES WHERE OWNER IN ('BOM_CAMPANIAS','BOM_PARTICIPACION','BOM_PREMIOS','BOM_AUDITORIA') GROUP BY OWNER ORDER BY OWNER;" | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
+```
+
+| Esquema | Tablas esperadas | Si falta |
+|---|---:|---|
+| `BOM_AUDITORIA` | 1 | Ejecutar `S19` y luego `S20` |
+| `BOM_CAMPANIAS` | 6 | Faltan `S14` o `S17` |
+| `BOM_PARTICIPACION` | 5 | Faltan `S16` o `S17` |
+| `BOM_PREMIOS` | 4 | Falta `S12` |
+
+Para saber si `S20` ya se ejecutó:
+
+```powershell
+"SELECT COUNT(*) FROM DBA_CONSTRAINTS WHERE CONSTRAINT_NAME IN ('FK_REGISTRO_ESTUDIANTE','FK_DETALLE_PREMIO');" | docker exec -i bomerp-oracle sqlplus -S system/123456@localhost:1521/FREEPDB1
+```
+
+Debe responder `2`. Si responde `0`, se ejecuta `S20`; si se ejecuta dos veces, Oracle responde que esos objetos ya existen (`ORA-02264` y `ORA-00955`) y no cambia nada.
 
 ## 5. Arrancar el backend
 
@@ -117,7 +144,7 @@ Para probar el flujo completo, entra como `admin1` y crea una campaña **Activa*
 | `ParticipacionEndToEndTest` | El flujo de participación de punta a punta contra Oracle real: cupo, rollback, validación, paginación, totales y ranking. |
 | `ProductoControllerTest` | El controlador del ejemplo guiado del docente. |
 
-Necesitan Oracle arriba, porque trabajan contra la base real.
+Necesitan Oracle arriba, porque trabajan contra la base real. `ParticipacionEndToEndTest` crea su propia campaña en una sede libre y la borra al terminar; si las tres sedes ya tienen una campaña activa, se marca como *Skipped* en lugar de tocar los datos de la demo.
 
 ## 9. Ejecución con el perfil de producción
 

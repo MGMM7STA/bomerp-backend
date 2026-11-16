@@ -1,6 +1,6 @@
 # Modelo de datos
 
-Este es el modelo **real** de la base del sistema: Oracle 23ai, tal como lo dejan creado los scripts de la carpeta `sql/` en el orden de la [Guía de ejecución](../../guia-ejecucion.md) (S12, S14, S15, S16, S17, S19 y S20). Coincide columna por columna con las entidades JPA del backend, que arranca con `ddl-auto: validate`: si una tabla o columna no existiera, la aplicación no levantaría.
+Este es el modelo **real** de la base del sistema: Oracle 23ai, tal como lo dejan creado los scripts de la carpeta `sql/` en el orden de la [Guía de ejecución](../../guia-ejecucion.md) (S12, S14, S15, S16, S17, S19, S20, S21 y S22). Coincide columna por columna con las entidades JPA del backend, que arranca con `ddl-auto: validate`: si una tabla o columna no existiera, la aplicación no levantaría.
 
 ## 1. Esquemas
 
@@ -243,10 +243,25 @@ erDiagram
 
 Las llaves primarias y las restricciones `UNIQUE` crean además su propio índice.
 
-## 5. Privilegios
+## 5. Particionamiento
+
+`REGISTROS` está particionada por rango de `FECHA` con `INTERVAL` mensual (`S22`). La primera partición, `P_INICIAL`, guarda todo lo anterior a 2026; desde ahí Oracle crea sola una partición nueva cada vez que llega un registro de un mes que todavía no tiene la suya.
+
+La tabla sigue siendo una sola para la aplicación: las consultas y las entidades JPA no cambiaron.
+
+## 6. PL/SQL
+
+| Objeto | Esquema | Qué hace |
+|---|---|---|
+| `OBTENER_PUNTAJE_ESTUDIANTE (estudiante, campaña)` | `BOM_PARTICIPACION` | Suma solo los puntos de evidencias `VALIDADO`, igual que el ranking. Si el estudiante no existe lanza `ORA-20001` |
+| `HABITO_MAS_REGISTRADO (campaña, sede)` | `BOM_PARTICIPACION` | Devuelve el hábito con más veces registradas; si no hay registros devuelve "Sin registros" (`NO_DATA_FOUND`) |
+| `TRG_EVENTOS_INMUTABLE` | `BOM_AUDITORIA` | Trigger `BEFORE UPDATE OR DELETE` sobre `EVENTOS`: lanza `ORA-20010` con el ID y el usuario del evento (`:OLD`). Ni el dueño del esquema puede alterar la auditoría sin deshabilitarlo |
+
+## 7. Privilegios
 
 | Usuario | Permisos |
 |---|---|
 | `BOMERP_APP` | `CREATE SESSION`; `SELECT, INSERT, UPDATE, DELETE` sobre las tablas de negocio |
 | `BOMERP_APP` sobre `BOM_AUDITORIA.EVENTOS` | Solo `SELECT` e `INSERT`: un evento de auditoría no se puede modificar ni borrar desde la aplicación |
+| `ROL_REPORTES` | Solo `SELECT` sobre registros, evidencias, estudiantes y eventos, y `EXECUTE` sobre las dos funciones: para quien solo necesita consultar |
 | Dueños de esquema (`BOM_CAMPANIAS`, `BOM_PARTICIPACION`, `BOM_PREMIOS`, `BOM_AUDITORIA`) | `CREATE SESSION`, `CREATE TABLE`, `CREATE VIEW`; la aplicación nunca se conecta con ellos |

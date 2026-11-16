@@ -65,8 +65,10 @@ La operación se trabajó en dos lugares, sobre el mismo dominio:
 | Modelo | 16 tablas en cuatro esquemas (`BOM_CAMPANIAS`, `BOM_PARTICIPACION`, `BOM_PREMIOS` y `BOM_AUDITORIA`), llaves primarias `IDENTITY`, llaves foráneas dentro de cada esquema y referencias por ID entre esquemas (ADR-02) |
 | Integridad | `CHECK` en cantidades, puntajes, estados y sedes; `UK_CUPO_DIA` única por campaña, estudiante y fecha; `S20` agrega las dos llaves foráneas que faltaban (`FK_REGISTRO_ESTUDIANTE` y `FK_DETALLE_PREMIO`) |
 | Seguridad | La aplicación entra como `BOMERP_APP`, que solo tiene `CREATE SESSION` y permisos por tabla; no es dueña de ningún esquema |
-| Auditoría inmutable | Sobre `BOM_AUDITORIA.EVENTOS` la aplicación solo tiene `SELECT` e `INSERT` |
-| Optimización | Índices `IX_REGISTRO_SEDE (SEDE, ESTADO, FECHA)`, `IX_REGISTRO_ESTUDIANTE`, `IX_EVIDENCIA_REGISTRO`, `IX_DETALLE_ACTA`, `IX_DETALLE_PREMIO`, `IX_EVENTOS_FECHA`, `IX_EVENTOS_ACCION` e `IX_SOLICITUD_ESTADO`; totales del reporte calculados en Oracle con `COUNT`, `SUM` y `GROUP BY` |
+| Auditoría inmutable | Sobre `BOM_AUDITORIA.EVENTOS` la aplicación solo tiene `SELECT` e `INSERT`, y el trigger `TRG_EVENTOS_INMUTABLE` rechaza cualquier `UPDATE` o `DELETE` con `ORA-20010` |
+| PL/SQL | Funciones `OBTENER_PUNTAJE_ESTUDIANTE` y `HABITO_MAS_REGISTRADO` con manejo de excepciones; rol `ROL_REPORTES` de solo lectura |
+| Particionamiento | `REGISTROS` por rango de `FECHA` con `INTERVAL` mensual; Oracle crea sola la partición de cada mes |
+| Optimización | Estadísticas con `DBMS_STATS` y plan con `EXPLAIN PLAN`; índices `IX_REGISTRO_SEDE (SEDE, ESTADO, FECHA)`, `IX_REGISTRO_ESTUDIANTE`, `IX_EVIDENCIA_REGISTRO`, `IX_DETALLE_ACTA`, `IX_DETALLE_PREMIO`, `IX_EVENTOS_FECHA`, `IX_EVENTOS_ACCION` e `IX_SOLICITUD_ESTADO`; totales del reporte calculados en Oracle con `COUNT`, `SUM` y `GROUP BY` |
 | Monitoreo | Endpoint de salud de Actuator y `TRACE_ID` de cada petición guardado en `EVENTOS` |
 
 ### Laboratorio del curso (Oracle 21c XE)
