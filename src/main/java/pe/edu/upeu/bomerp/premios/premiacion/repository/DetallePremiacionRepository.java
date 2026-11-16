@@ -10,4 +10,6 @@ public interface DetallePremiacionRepository
         extends JpaRepository<DetallePremiacion, Long> {
 
     List<DetallePremiacion> findByActaId(Long actaId);
-}
+
+    boolean existsByPremioId(Long premioId);
+}

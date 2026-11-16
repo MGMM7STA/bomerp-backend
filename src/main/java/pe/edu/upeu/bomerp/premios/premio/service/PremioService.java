@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import pe.edu.upeu.bomerp.premios.categoria.entity.CategoriaPremio;
 import pe.edu.upeu.bomerp.premios.categoria.repository.CategoriaPremioRepository;
+import pe.edu.upeu.bomerp.premios.premiacion.repository.DetallePremiacionRepository;
 import pe.edu.upeu.bomerp.premios.premio.dto.PremioRequest;
 import pe.edu.upeu.bomerp.premios.premio.dto.PremioResponse;
 import pe.edu.upeu.bomerp.premios.premio.entity.Premio;
@@ -24,6 +25,7 @@ public class PremioService {
     private final PremioRepository repository;
     private final PremioMapper mapper;
     private final CategoriaPremioRepository categoriaRepository;
+    private final DetallePremiacionRepository detallePremiacionRepository;
 
     @Transactional(readOnly = true)
         public List<PremioResponse> listar(Long categoriaId) {
@@ -45,7 +47,7 @@ public class PremioService {
 public PremioResponse obtener(Long id) {
     Premio premio = repository.findByIdConCategoria(id)
             .orElseThrow(() ->
-                new RuntimeException("Premio no encontrado con ID: " + id)
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Premio no encontrado con ID: " + id)
             );
 
     return mapper.toResponse(premio);
@@ -109,6 +111,12 @@ public PremioResponse actualizar(
                         "Premio no encontrado"
                 ));
 
+        if (detallePremiacionRepository.existsByPremioId(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No se puede eliminar el premio porque ya fue entregado en un acta de premiacion"
+            );
+        }
         repository.delete(premio);
     }
     public void descontarStock(Long premioId, Integer cantidad) {
@@ -159,4 +167,4 @@ public void aumentarStock(Long premioId, Integer cantidad) {
     repository.save(premio);
 }
 
-}
+}

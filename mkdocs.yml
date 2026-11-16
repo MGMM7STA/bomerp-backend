@@ -1,5 +1,5 @@
 site_name: Semestre Saludable UPeU - Backend
-site_description: Backend REST modular del proyecto Semestre Saludable UPeU - LP2 Unidad 1
+site_description: Backend REST modular del proyecto Semestre Saludable UPeU - Proyecto Integrador
 site_author: Montalvo Machaca, Maykol Gabriel
 repo_url: https://github.com/MGMM7STA/bomerp-backend
 repo_name: MGMM7STA/bomerp-backend
@@ -31,6 +31,8 @@ nav:
   - Inicio: index.md
   - Producto Unidad 1: proyecto-integrador/u1/lp2-demo.md
   - Producto Unidad 3: proyecto-integrador/u3/lp2-producto.md
+  - Sustentacion final: proyecto-integrador/u3/sustentacion-final.md
+  - Modelo de datos: proyecto-integrador/u3/modelo-datos.md
   - Guia de ejecucion: guia-ejecucion.md
 
 markdown_extensions:

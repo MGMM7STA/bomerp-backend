@@ -67,7 +67,7 @@ En 5 minutos hubo 15 lecturas de los catálogos candidatos, unos 0.2 segundos de
 ### 2.5 Logging, Actuator y configuración de producción
 
 - `logback-spring.xml`: `pe.edu.upeu.bomerp` en `DEBUG` con el perfil `dev` y en `INFO` con `prod`; Hibernate en `WARN` en `prod`.
-- Actuator: `dev` expone todo; `prod` solo `health,info`, y además la seguridad JWT rechaza cualquier petición sin token.
+- Actuator: `dev` expone todo; `prod` solo `health,info`. Esos dos son públicos para que Docker o un balanceador revisen la salud sin token; cualquier otro endpoint pide JWT.
 - `application-prod.yml` y `compose.yml` leen conexiones, usuarios, contraseñas y el secreto del cliente de Keycloak desde variables de entorno. `.env.example` documenta los nombres sin valores; el `.env` real está en `.gitignore`.
 - `environment.prod.ts` reemplaza a `environment.ts` en el build de producción por `fileReplacements`.
 
@@ -134,3 +134,8 @@ Al terminar borra todo lo que creó. Resultado: `Tests run: 1, Failures: 0, Erro
 | 08/11/2026 | `categoria-habito-form.ts` imprimía el formulario en la consola en cada tecla, resto de una práctica de clase. | Se eliminaron los `console.log` |
 | 08/11/2026 | `.env.example` (que sí sube a GitHub) tenía la contraseña de la base y el secreto del cliente de Keycloak; `compose.yml` de producción tenía cuatro contraseñas escritas y `application.yml` usaba el secreto como valor por defecto, así que `prod` arrancaba con el secreto de desarrollo si nadie lo configuraba. | `.env.example` solo con nombres, `compose.yml` con `${...}` y el secreto de desarrollo movido a `application-dev.yml` |
 | 08/11/2026 | El panel de coordinación muestra un 404 en consola cuando la sede no tiene campaña activa. | Es la respuesta esperada; el frontend la maneja mostrando "sin campaña activa" |
+| 16/11/2026 | `PremioController` declaraba dentro de sí una interfaz `PremioRepository` que nadie usaba. | Se eliminó; el repositorio real sigue en `premio/repository` |
+| 16/11/2026 | Pedir un premio inexistente respondía 500 porque el servicio lanzaba `RuntimeException`. | Ahora responde 404 |
+| 16/11/2026 | Eliminar un premio que ya estaba en un acta dejaba el acta apuntando a un premio que ya no existe. | El servicio lo impide con 409 y `S20` agrega `FK_DETALLE_PREMIO` en la base |
+| 16/11/2026 | `REGISTROS.ID_ESTUDIANTE` y `DETALLES_PREMIACION.PREMIO_ID` estaban en el mismo esquema que su tabla de destino pero sin llave foránea. | `S20_integridad_referencial.sql` agrega las dos llaves y los índices de las columnas usadas en búsquedas |
+| 16/11/2026 | `ProductoControllerTest` (ejemplo del docente, con `@WebMvcTest`) no levantaba desde que se agregó Keycloak: la configuración automática del servidor de recursos OAuth2 pedía `HttpSecurity` dentro de la prueba de solo controlador. | La prueba excluye esa configuración; los 4 casos vuelven a pasar |
