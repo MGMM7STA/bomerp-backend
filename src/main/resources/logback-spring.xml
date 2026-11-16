@@ -21,7 +21,19 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
     </appender>
-    
+
+    <appender name="JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/bomerp.json</file>
+        <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+            <format>ecs</format>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/bomerp-%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
     <springProfile name="dev">
         <logger name="pe.edu.upeu.bomerp" level="DEBUG"/>
     </springProfile>
@@ -33,5 +45,6 @@
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
+        <appender-ref ref="JSON"/>
     </root>
 </configuration>
