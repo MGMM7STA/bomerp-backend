@@ -500,10 +500,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-privilegios" class="md-nav__link">
+  <a href="#5-particionamiento" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Privilegios
+        5. Particionamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-plsql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. PL/SQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-privilegios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Privilegios
       
     </span>
   </a>
@@ -644,10 +666,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-privilegios" class="md-nav__link">
+  <a href="#5-particionamiento" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Privilegios
+        5. Particionamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-plsql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. PL/SQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-privilegios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Privilegios
       
     </span>
   </a>
@@ -675,7 +719,7 @@
 
 
 <h1 id="modelo-de-datos">Modelo de datos<a class="headerlink" href="#modelo-de-datos" title="Permanent link">&para;</a></h1>
-<p>Este es el modelo <strong>real</strong> de la base del sistema: Oracle 23ai, tal como lo dejan creado los scripts de la carpeta <code>sql/</code> en el orden de la <a href="../../../guia-ejecucion/">Guía de ejecución</a> (S12, S14, S15, S16, S17, S19 y S20). Coincide columna por columna con las entidades JPA del backend, que arranca con <code>ddl-auto: validate</code>: si una tabla o columna no existiera, la aplicación no levantaría.</p>
+<p>Este es el modelo <strong>real</strong> de la base del sistema: Oracle 23ai, tal como lo dejan creado los scripts de la carpeta <code>sql/</code> en el orden de la <a href="../../../guia-ejecucion/">Guía de ejecución</a> (S12, S14, S15, S16, S17, S19, S20, S21 y S22). Coincide columna por columna con las entidades JPA del backend, que arranca con <code>ddl-auto: validate</code>: si una tabla o columna no existiera, la aplicación no levantaría.</p>
 <h2 id="1-esquemas">1. Esquemas<a class="headerlink" href="#1-esquemas" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1100,7 +1144,37 @@
 </tbody>
 </table>
 <p>Las llaves primarias y las restricciones <code>UNIQUE</code> crean además su propio índice.</p>
-<h2 id="5-privilegios">5. Privilegios<a class="headerlink" href="#5-privilegios" title="Permanent link">&para;</a></h2>
+<h2 id="5-particionamiento">5. Particionamiento<a class="headerlink" href="#5-particionamiento" title="Permanent link">&para;</a></h2>
+<p><code>REGISTROS</code> está particionada por rango de <code>FECHA</code> con <code>INTERVAL</code> mensual (<code>S22</code>). La primera partición, <code>P_INICIAL</code>, guarda todo lo anterior a 2026; desde ahí Oracle crea sola una partición nueva cada vez que llega un registro de un mes que todavía no tiene la suya.</p>
+<p>La tabla sigue siendo una sola para la aplicación: las consultas y las entidades JPA no cambiaron.</p>
+<h2 id="6-plsql">6. PL/SQL<a class="headerlink" href="#6-plsql" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Objeto</th>
+<th>Esquema</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OBTENER_PUNTAJE_ESTUDIANTE (estudiante, campaña)</code></td>
+<td><code>BOM_PARTICIPACION</code></td>
+<td>Suma solo los puntos de evidencias <code>VALIDADO</code>, igual que el ranking. Si el estudiante no existe lanza <code>ORA-20001</code></td>
+</tr>
+<tr>
+<td><code>HABITO_MAS_REGISTRADO (campaña, sede)</code></td>
+<td><code>BOM_PARTICIPACION</code></td>
+<td>Devuelve el hábito con más veces registradas; si no hay registros devuelve "Sin registros" (<code>NO_DATA_FOUND</code>)</td>
+</tr>
+<tr>
+<td><code>TRG_EVENTOS_INMUTABLE</code></td>
+<td><code>BOM_AUDITORIA</code></td>
+<td>Trigger <code>BEFORE UPDATE OR DELETE</code> sobre <code>EVENTOS</code>: lanza <code>ORA-20010</code> con el ID y el usuario del evento (<code>:OLD</code>). Ni el dueño del esquema puede alterar la auditoría sin deshabilitarlo</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-privilegios">7. Privilegios<a class="headerlink" href="#7-privilegios" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1116,6 +1190,10 @@
 <tr>
 <td><code>BOMERP_APP</code> sobre <code>BOM_AUDITORIA.EVENTOS</code></td>
 <td>Solo <code>SELECT</code> e <code>INSERT</code>: un evento de auditoría no se puede modificar ni borrar desde la aplicación</td>
+</tr>
+<tr>
+<td><code>ROL_REPORTES</code></td>
+<td>Solo <code>SELECT</code> sobre registros, evidencias, estudiantes y eventos, y <code>EXECUTE</code> sobre las dos funciones: para quien solo necesita consultar</td>
 </tr>
 <tr>
 <td>Dueños de esquema (<code>BOM_CAMPANIAS</code>, <code>BOM_PARTICIPACION</code>, <code>BOM_PREMIOS</code>, <code>BOM_AUDITORIA</code>)</td>

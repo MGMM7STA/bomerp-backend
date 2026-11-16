@@ -951,11 +951,19 @@
 </tr>
 <tr>
 <td>Auditoría inmutable</td>
-<td>Sobre <code>BOM_AUDITORIA.EVENTOS</code> la aplicación solo tiene <code>SELECT</code> e <code>INSERT</code></td>
+<td>Sobre <code>BOM_AUDITORIA.EVENTOS</code> la aplicación solo tiene <code>SELECT</code> e <code>INSERT</code>, y el trigger <code>TRG_EVENTOS_INMUTABLE</code> rechaza cualquier <code>UPDATE</code> o <code>DELETE</code> con <code>ORA-20010</code></td>
+</tr>
+<tr>
+<td>PL/SQL</td>
+<td>Funciones <code>OBTENER_PUNTAJE_ESTUDIANTE</code> y <code>HABITO_MAS_REGISTRADO</code> con manejo de excepciones; rol <code>ROL_REPORTES</code> de solo lectura</td>
+</tr>
+<tr>
+<td>Particionamiento</td>
+<td><code>REGISTROS</code> por rango de <code>FECHA</code> con <code>INTERVAL</code> mensual; Oracle crea sola la partición de cada mes</td>
 </tr>
 <tr>
 <td>Optimización</td>
-<td>Índices <code>IX_REGISTRO_SEDE (SEDE, ESTADO, FECHA)</code>, <code>IX_REGISTRO_ESTUDIANTE</code>, <code>IX_EVIDENCIA_REGISTRO</code>, <code>IX_DETALLE_ACTA</code>, <code>IX_DETALLE_PREMIO</code>, <code>IX_EVENTOS_FECHA</code>, <code>IX_EVENTOS_ACCION</code> e <code>IX_SOLICITUD_ESTADO</code>; totales del reporte calculados en Oracle con <code>COUNT</code>, <code>SUM</code> y <code>GROUP BY</code></td>
+<td>Estadísticas con <code>DBMS_STATS</code> y plan con <code>EXPLAIN PLAN</code>; índices <code>IX_REGISTRO_SEDE (SEDE, ESTADO, FECHA)</code>, <code>IX_REGISTRO_ESTUDIANTE</code>, <code>IX_EVIDENCIA_REGISTRO</code>, <code>IX_DETALLE_ACTA</code>, <code>IX_DETALLE_PREMIO</code>, <code>IX_EVENTOS_FECHA</code>, <code>IX_EVENTOS_ACCION</code> e <code>IX_SOLICITUD_ESTADO</code>; totales del reporte calculados en Oracle con <code>COUNT</code>, <code>SUM</code> y <code>GROUP BY</code></td>
 </tr>
 <tr>
 <td>Monitoreo</td>

@@ -494,6 +494,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. Crear los esquemas y los datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#si-la-maquina-ya-tenia-la-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Si la máquina ya tenía la base
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -638,6 +655,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. Crear los esquemas y los datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#si-la-maquina-ya-tenia-la-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Si la máquina ya tenía la base
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -750,7 +784,7 @@
 </tr>
 <tr>
 <td>Node.js</td>
-<td>22</td>
+<td>22.22.3, o 24.15 en adelante (lo exige Angular 22)</td>
 <td><code>node -v</code></td>
 </tr>
 <tr>
@@ -809,6 +843,8 @@
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-Content</span> <span class="n">sql</span><span class="p">\</span><span class="n">S17_sedes_y_odoo</span><span class="p">.</span><span class="n">sql</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-Content</span> <span class="n">sql</span><span class="p">\</span><span class="n">S19_auditoria</span><span class="p">.</span><span class="n">sql</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-Content</span> <span class="n">sql</span><span class="p">\</span><span class="n">S20_integridad_referencial</span><span class="p">.</span><span class="n">sql</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-Content</span> <span class="n">sql</span><span class="p">\</span><span class="n">S21_plsql_y_roles</span><span class="p">.</span><span class="n">sql</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-Content</span> <span class="n">sql</span><span class="p">\</span><span class="n">S22_particion_registros</span><span class="p">.</span><span class="n">sql</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
 </code></pre></div>
 <table>
 <thead>
@@ -854,20 +890,69 @@
 <td><code>S20_integridad_referencial.sql</code></td>
 <td>Llaves foráneas que faltaban dentro de un mismo esquema (registro con su estudiante, detalle de acta con su premio) e índices sobre las columnas de esas llaves.</td>
 </tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>S21_plsql_y_roles.sql</code></td>
+<td>Funciones <code>OBTENER_PUNTAJE_ESTUDIANTE</code> y <code>HABITO_MAS_REGISTRADO</code>, el trigger que impide modificar o borrar la auditoría y el rol <code>ROL_REPORTES</code>. Al final provoca a propósito <code>ORA-20001</code> y <code>ORA-20010</code> para demostrar las dos reglas.</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>S22_particion_registros.sql</code></td>
+<td>Particiona <code>REGISTROS</code> por mes con <code>INTERVAL</code>, sin perder datos, actualiza las estadísticas y muestra el plan de ejecución.</td>
+</tr>
 </tbody>
 </table>
 <p><code>S18_reinicio_datos.sql</code> <strong>no</strong> forma parte de la instalación: borra los datos del proyecto para empezar de cero.</p>
 <p>Si <code>S12_base_completa.sql</code> responde <code>ORA-01920</code>, los esquemas ya existían: la base ya estaba creada.</p>
+<h3 id="si-la-maquina-ya-tenia-la-base">Si la máquina ya tenía la base<a class="headerlink" href="#si-la-maquina-ya-tenia-la-base" title="Permanent link">&para;</a></h3>
+<p>El volumen de Docker conserva la base aunque se apague el contenedor. Para saber qué scripts faltan, esta consulta cuenta las tablas de cada esquema del proyecto:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="s2">"SELECT OWNER, COUNT(*) FROM DBA_TABLES WHERE OWNER IN ('BOM_CAMPANIAS','BOM_PARTICIPACION','BOM_PREMIOS','BOM_AUDITORIA') GROUP BY OWNER ORDER BY OWNER;"</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Esquema</th>
+<th style="text-align: right;">Tablas esperadas</th>
+<th>Si falta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BOM_AUDITORIA</code></td>
+<td style="text-align: right;">1</td>
+<td>Ejecutar <code>S19</code> y luego <code>S20</code></td>
+</tr>
+<tr>
+<td><code>BOM_CAMPANIAS</code></td>
+<td style="text-align: right;">6</td>
+<td>Faltan <code>S14</code> o <code>S17</code></td>
+</tr>
+<tr>
+<td><code>BOM_PARTICIPACION</code></td>
+<td style="text-align: right;">5</td>
+<td>Faltan <code>S16</code> o <code>S17</code></td>
+</tr>
+<tr>
+<td><code>BOM_PREMIOS</code></td>
+<td style="text-align: right;">4</td>
+<td>Falta <code>S12</code></td>
+</tr>
+</tbody>
+</table>
+<p>Para saber si <code>S20</code> ya se ejecutó:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="s2">"SELECT COUNT(*) FROM DBA_CONSTRAINTS WHERE CONSTRAINT_NAME IN ('FK_REGISTRO_ESTUDIANTE','FK_DETALLE_PREMIO');"</span> <span class="p">|</span> <span class="n">docker</span> <span class="n">exec</span> <span class="n">-i</span> <span class="n">bomerp-oracle</span> <span class="n">sqlplus</span> <span class="n">-S</span> <span class="n">system</span><span class="p">/</span><span class="n">123456</span><span class="nv">@localhost</span><span class="p">:</span><span class="n">1521</span><span class="p">/</span><span class="n">FREEPDB1</span>
+</code></pre></div>
+<p>Debe responder <code>2</code>. Si responde <code>0</code>, se ejecuta <code>S20</code>; si se ejecuta dos veces, Oracle responde que esos objetos ya existen (<code>ORA-02264</code> y <code>ORA-00955</code>) y no cambia nada.</p>
 <h2 id="5-arrancar-el-backend">5. Arrancar el backend<a class="headerlink" href="#5-arrancar-el-backend" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">.\</span><span class="n">mvnw</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">.\</span><span class="n">mvnw</span> <span class="n">spring-boot</span><span class="p">:</span><span class="n">run</span>
 </code></pre></div>
 <p>Está arriba cuando el log dice <code>Started BomerpBackendApplication</code>, en el puerto 8080.</p>
 <p>Si en lugar de eso aparece <code>Schema validation: missing table [...]</code>, falta ejecutar alguno de los scripts del paso 4. La aplicación corre con <code>ddl-auto: validate</code>: se niega a arrancar si una entidad no tiene su tabla real. Es intencional, porque es preferible que falle al arrancar a que falle a mitad de una operación.</p>
 <h2 id="6-arrancar-el-frontend">6. Arrancar el frontend<a class="headerlink" href="#6-arrancar-el-frontend" title="Permanent link">&para;</a></h2>
 <p>En otra terminal:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd </span><span class="p">..\</span><span class="n">bomerp-frontend</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">npm</span> <span class="n">install</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">npm</span> <span class="nb">start</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd </span><span class="p">..\</span><span class="n">bomerp-frontend</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">npm</span> <span class="n">install</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">npm</span> <span class="nb">start</span>
 </code></pre></div>
 <p>La SPA queda en <code>http://localhost:4200</code>. En desarrollo ya apunta al backend en el puerto 8080 y a Keycloak en el 38080, así que no hay nada que configurar.</p>
 <h2 id="7-verificar">7. Verificar<a class="headerlink" href="#7-verificar" title="Permanent link">&para;</a></h2>
@@ -899,7 +984,7 @@
 </table>
 <p>Para probar el flujo completo, entra como <code>admin1</code> y crea una campaña <strong>Activa</strong> en tu sede con dos o tres hábitos. Después entra como <code>estudiante1</code> y registra una participación.</p>
 <h2 id="8-ejecutar-las-pruebas">8. Ejecutar las pruebas<a class="headerlink" href="#8-ejecutar-las-pruebas" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">.\</span><span class="n">mvnw</span> <span class="n">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">.\</span><span class="n">mvnw</span> <span class="n">test</span>
 </code></pre></div>
 <table>
 <thead>
@@ -927,11 +1012,11 @@
 </tr>
 </tbody>
 </table>
-<p>Necesitan Oracle arriba, porque trabajan contra la base real.</p>
+<p>Necesitan Oracle arriba, porque trabajan contra la base real. <code>ParticipacionEndToEndTest</code> crea su propia campaña en una sede libre y la borra al terminar; si las tres sedes ya tienen una campaña activa, se marca como <em>Skipped</em> en lugar de tocar los datos de la demo.</p>
 <h2 id="9-ejecucion-con-el-perfil-de-produccion">9. Ejecución con el perfil de producción<a class="headerlink" href="#9-ejecucion-con-el-perfil-de-produccion" title="Permanent link">&para;</a></h2>
 <p><code>compose.yml</code> levanta el backend ya empaquetado junto con Oracle, Keycloak y PostgreSQL, con el perfil <code>prod</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">copy </span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">example</span> <span class="p">.</span><span class="n">env</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">docker</span> <span class="n">compose</span> <span class="n">up</span> <span class="n">-d</span> <span class="p">-</span><span class="n">-build</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">copy </span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">example</span> <span class="p">.</span><span class="n">env</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">docker</span> <span class="n">compose</span> <span class="n">up</span> <span class="n">-d</span> <span class="p">-</span><span class="n">-build</span>
 </code></pre></div>
 <p>Antes de levantar, completa los valores de <code>.env</code>. Ese archivo no se sube al repositorio.</p>
 <table>
