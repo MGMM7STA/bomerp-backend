@@ -991,6 +991,7 @@
 <h3 id="25-logging-actuator-y-configuracion-de-produccion">2.5 Logging, Actuator y configuración de producción<a class="headerlink" href="#25-logging-actuator-y-configuracion-de-produccion" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>logback-spring.xml</code>: <code>pe.edu.upeu.bomerp</code> en <code>DEBUG</code> con el perfil <code>dev</code> y en <code>INFO</code> con <code>prod</code>; Hibernate en <code>WARN</code> en <code>prod</code>.</li>
+<li>Logs estructurados: además del log de texto (<code>logs/bomerp.log</code>), cada evento se escribe en JSON con el formato ECS de Elastic en <code>logs/bomerp.json</code>, con fecha, nivel, clase, mensaje y el <code>traceId</code> de la petición. Así un recolector como ELK o Grafana Loki los puede leer sin interpretar texto.</li>
 <li>Actuator: <code>dev</code> expone todo; <code>prod</code> solo <code>health,info</code>. Esos dos son públicos para que Docker o un balanceador revisen la salud sin token; cualquier otro endpoint pide JWT.</li>
 <li><code>application-prod.yml</code> y <code>compose.yml</code> leen conexiones, usuarios, contraseñas y el secreto del cliente de Keycloak desde variables de entorno. <code>.env.example</code> documenta los nombres sin valores; el <code>.env</code> real está en <code>.gitignore</code>.</li>
 <li><code>environment.prod.ts</code> reemplaza a <code>environment.ts</code> en el build de producción por <code>fileReplacements</code>.</li>
