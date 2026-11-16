@@ -1,0 +1,1218 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Backend REST modular del proyecto Semestre Saludable UPeU - Proyecto Integrador">
+      
+      
+        <meta name="author" content="Montalvo Machaca, Maykol Gabriel">
+      
+      
+      
+        <link rel="prev" href="../lp2-producto/">
+      
+      
+        <link rel="next" href="../modelo-datos/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Sustentacion final - Semestre Saludable UPeU - Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sustentacion-final-integrada" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../.." title="Semestre Saludable UPeU - Backend" class="md-header__button md-logo" aria-label="Semestre Saludable UPeU - Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Semestre Saludable UPeU - Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sustentacion final
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/MGMM7STA/bomerp-backend" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MGMM7STA/bomerp-backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Semestre Saludable UPeU - Backend" class="md-nav__button md-logo" aria-label="Semestre Saludable UPeU - Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Semestre Saludable UPeU - Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/MGMM7STA/bomerp-backend" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MGMM7STA/bomerp-backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../u1/lp2-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto Unidad 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lp2-producto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Producto Unidad 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sustentacion final
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sustentacion final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Pitch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-secuencia-de-la-sustentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Secuencia de la sustentación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-diseno-ads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Diseño (ADS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Diseño (ADS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decisiones-de-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decisiones de arquitectura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-operacion-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Operación (BD2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Operación (BD2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-integrada-oracle-23ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base integrada (Oracle 23ai)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#laboratorio-del-curso-oracle-21c-xe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laboratorio del curso (Oracle 21c XE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-aplicacion-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Aplicación (LP2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-demo-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Demo final
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-matriz-final-de-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Matriz final de trazabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-evidencia-obligatoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Evidencia obligatoria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelo-datos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelo de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guia-ejecucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guia de ejecucion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Pitch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-secuencia-de-la-sustentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Secuencia de la sustentación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-diseno-ads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Diseño (ADS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Diseño (ADS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decisiones-de-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decisiones de arquitectura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-operacion-bd2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Operación (BD2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Operación (BD2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-integrada-oracle-23ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base integrada (Oracle 23ai)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#laboratorio-del-curso-oracle-21c-xe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laboratorio del curso (Oracle 21c XE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-aplicacion-lp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Aplicación (LP2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-demo-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Demo final
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-matriz-final-de-trazabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Matriz final de trazabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-evidencia-obligatoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Evidencia obligatoria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sustentacion-final-integrada">Sustentación final integrada<a class="headerlink" href="#sustentacion-final-integrada" title="Permanent link">&para;</a></h1>
+<p><strong>Proyecto:</strong> Semestre Saludable UPeU
+<strong>Equipo 01:</strong> Montalvo Machaca, Maykol Gabriel · Cruz Mendoza, Deysi
+<strong>Cursos:</strong> Análisis y Diseño de Software · Administración de Base de Datos II · Lenguaje de Programación II
+<strong>Sede:</strong> UPeU Juliaca — Semestre 2026-2</p>
+<p>Esta página reúne lo que se presenta en la sustentación final del Proyecto Integrador: un solo sistema visto desde los tres cursos. En ADS se diseñó, en LP2 se construyó y en BD2 se opera sobre Oracle.</p>
+<h2 id="1-pitch">1. Pitch<a class="headerlink" href="#1-pitch" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Problema</strong></td>
+<td>La universidad promueve hábitos saludables, pero participan muy pocos estudiantes. Las evidencias llegan por Instagram y WhatsApp, un encargado las revisa a mano unos 30 minutos por jornada y no queda ningún dato para medir si alguien cambió.</td>
+</tr>
+<tr>
+<td><strong>Solución</strong></td>
+<td>Un sistema web donde el estudiante registra su hábito con foto en tres pasos, la coordinación de su sede valida cada evidencia y la jefatura premia con el ranking.</td>
+</tr>
+<tr>
+<td><strong>Valor</strong></td>
+<td>La jefatura sabe en tiempo real cuántos estudiantes participan, la revisión deja datos y cada premio tiene un respaldo verificable.</td>
+</tr>
+</tbody>
+</table>
+<p>El sistema se validó con la Directora de Universidad Saludable en una reunión por Microsoft Teams el 8 de noviembre de 2026.</p>
+<h2 id="2-secuencia-de-la-sustentacion">2. Secuencia de la sustentación<a class="headerlink" href="#2-secuencia-de-la-sustentacion" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Momento</th>
+<th style="text-align: right;">Tiempo</th>
+<th>Qué se muestra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pitch ejecutivo</td>
+<td style="text-align: right;">1 a 3 min</td>
+<td>Problema, solución y valor, con el video del sistema</td>
+</tr>
+<tr>
+<td>Diseño ADS</td>
+<td style="text-align: right;">3 min</td>
+<td>Arquitectura C4, UML, patrones y ADR</td>
+</tr>
+<tr>
+<td>Operación BD2</td>
+<td style="text-align: right;">3 min</td>
+<td>Modelo de datos, seguridad, optimización, respaldo y recuperación</td>
+</tr>
+<tr>
+<td>Aplicación LP2</td>
+<td style="text-align: right;">5 min</td>
+<td>Backend, SPA, Keycloak, optimización, caché, observabilidad, paginación y auditoría</td>
+</tr>
+<tr>
+<td>Demo final</td>
+<td style="text-align: right;">5 min</td>
+<td>Flujo completo autenticado, de la pantalla a Oracle</td>
+</tr>
+<tr>
+<td>Preguntas individuales</td>
+<td style="text-align: right;">5 min por integrante</td>
+<td>Aporte y defensa técnica de cada uno</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-diseno-ads">3. Diseño (ADS)<a class="headerlink" href="#3-diseno-ads" title="Permanent link">&para;</a></h2>
+<p>El sistema es un <strong>monolito modular</strong>: una sola aplicación Spring Boot con seis módulos de Spring Modulith. Cada módulo repite las mismas capas (Controller, Service, Repository, DTO y Mapper) y solo se comunica con los demás por sus servicios públicos.</p>
+<table>
+<thead>
+<tr>
+<th>Vista</th>
+<th>Dónde verla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C4 nivel 1 y 2 (contexto y contenedores)</td>
+<td><a href="https://lucid.app/lucidchart/d50d9dce-97e1-4457-8617-6b3bb0b9cbbc/view">Lucidchart, archivo 1</a></td>
+</tr>
+<tr>
+<td>C4 nivel 3 (general y por módulo) y despliegue</td>
+<td><a href="https://lucid.app/lucidchart/ae3b2e35-040a-4b09-a8a0-7bad5a62c8ba/view">Lucidchart, archivo 2</a></td>
+</tr>
+<tr>
+<td>Dominio, UML, patrones e integración (6 sesiones)</td>
+<td><a href="https://miro.com/app/board/uXjVHpU7nYw=/">Tablero Miro</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="decisiones-de-arquitectura">Decisiones de arquitectura<a class="headerlink" href="#decisiones-de-arquitectura" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ADR</th>
+<th>Decisión</th>
+<th>Consecuencia aceptada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADR-01</td>
+<td>Monolito modular con Spring Modulith</td>
+<td>Un solo despliegue; un módulo no puede escalar por separado</td>
+</tr>
+<tr>
+<td>ADR-02</td>
+<td>Cuatro esquemas Oracle y referencias por ID</td>
+<td>No hay FK entre esquemas; el detalle copia nombre y puntaje del hábito</td>
+</tr>
+<tr>
+<td>ADR-03</td>
+<td>Keycloak como proveedor de identidad</td>
+<td>Estándar OIDC con PKCE, a cambio de un contenedor más</td>
+</tr>
+<tr>
+<td>ADR-04</td>
+<td>Registro y cupo en una sola transacción</td>
+<td>Rollback completo ante cualquier error; sin bloqueo pesimista, dos envíos simultáneos podrían pasar el tope</td>
+</tr>
+<tr>
+<td>ADR-05</td>
+<td>Fotos en disco y no en la base</td>
+<td>El respaldo debe incluir el volumen de evidencias</td>
+</tr>
+<tr>
+<td>ADR-06</td>
+<td>Caché HTTP con ETag; Redis descartado</td>
+<td>Se reconsidera con cientos de lecturas por minuto</td>
+</tr>
+<tr>
+<td>ADR-07</td>
+<td>Auditoría inmutable en transacción aparte</td>
+<td>Si la auditoría falla, la operación principal no se pierde</td>
+</tr>
+<tr>
+<td>ADR-08</td>
+<td>Cuentas desde solicitudes de Odoo CRM</td>
+<td>Depende de que Odoo responda</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-operacion-bd2">4. Operación (BD2)<a class="headerlink" href="#4-operacion-bd2" title="Permanent link">&para;</a></h2>
+<p>La operación se trabajó en dos lugares, sobre el mismo dominio:</p>
+<ul>
+<li><strong>Base integrada del sistema:</strong> Oracle 23ai Free en Docker, la que usa el backend. Su modelo completo está en <a href="../modelo-datos/">Modelo de datos</a>.</li>
+<li><strong>Laboratorio del curso de BD2:</strong> Oracle 21c XE con SQL Developer, en las máquinas de la universidad, con el esquema <code>SALUDABLE</code>. Ahí se practicaron particiones, respaldo, recuperación y PL/SQL.</li>
+</ul>
+<h3 id="base-integrada-oracle-23ai">Base integrada (Oracle 23ai)<a class="headerlink" href="#base-integrada-oracle-23ai" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modelo</td>
+<td>16 tablas en cuatro esquemas (<code>BOM_CAMPANIAS</code>, <code>BOM_PARTICIPACION</code>, <code>BOM_PREMIOS</code> y <code>BOM_AUDITORIA</code>), llaves primarias <code>IDENTITY</code>, llaves foráneas dentro de cada esquema y referencias por ID entre esquemas (ADR-02)</td>
+</tr>
+<tr>
+<td>Integridad</td>
+<td><code>CHECK</code> en cantidades, puntajes, estados y sedes; <code>UK_CUPO_DIA</code> única por campaña, estudiante y fecha; <code>S20</code> agrega las dos llaves foráneas que faltaban (<code>FK_REGISTRO_ESTUDIANTE</code> y <code>FK_DETALLE_PREMIO</code>)</td>
+</tr>
+<tr>
+<td>Seguridad</td>
+<td>La aplicación entra como <code>BOMERP_APP</code>, que solo tiene <code>CREATE SESSION</code> y permisos por tabla; no es dueña de ningún esquema</td>
+</tr>
+<tr>
+<td>Auditoría inmutable</td>
+<td>Sobre <code>BOM_AUDITORIA.EVENTOS</code> la aplicación solo tiene <code>SELECT</code> e <code>INSERT</code></td>
+</tr>
+<tr>
+<td>Optimización</td>
+<td>Índices <code>IX_REGISTRO_SEDE (SEDE, ESTADO, FECHA)</code>, <code>IX_REGISTRO_ESTUDIANTE</code>, <code>IX_EVIDENCIA_REGISTRO</code>, <code>IX_DETALLE_ACTA</code>, <code>IX_DETALLE_PREMIO</code>, <code>IX_EVENTOS_FECHA</code>, <code>IX_EVENTOS_ACCION</code> e <code>IX_SOLICITUD_ESTADO</code>; totales del reporte calculados en Oracle con <code>COUNT</code>, <code>SUM</code> y <code>GROUP BY</code></td>
+</tr>
+<tr>
+<td>Monitoreo</td>
+<td>Endpoint de salud de Actuator y <code>TRACE_ID</code> de cada petición guardado en <code>EVENTOS</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="laboratorio-del-curso-oracle-21c-xe">Laboratorio del curso (Oracle 21c XE)<a class="headerlink" href="#laboratorio-del-curso-oracle-21c-xe" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Particiones</td>
+<td>Por rango de año (<code>P2025</code>, <code>P2026</code>, <code>P_FUTURO</code>) y por lista de sede (<code>P_JULIACA</code>, <code>P_LIMA</code>, <code>P_TARAPOTO</code>, <code>P_OTRAS</code>)</td>
+</tr>
+<tr>
+<td>Respaldo y recuperación</td>
+<td>Respaldo lógico con <code>exp</code> e <code>imp</code>, comprobado con <code>MINUS</code>; validación de la restauración con RMAN</td>
+</tr>
+<tr>
+<td>PL/SQL</td>
+<td>Procedimientos <code>REGISTRAR_PARTICIPACION</code> y <code>ANULAR_REGISTRO</code>, funciones <code>OBTENER_PUNTAJE_ESTUDIANTE</code> y <code>HABITO_MAS_REGISTRADO</code>, disparadores sobre el detalle y el registro, y un log con <code>AUTONOMOUS_TRANSACTION</code></td>
+</tr>
+</tbody>
+</table>
+<p>Los scripts de la base integrada están en la carpeta <code>sql/</code> del repositorio y se ejecutan en el orden de la <a href="../../../guia-ejecucion/">Guía de ejecución</a>.</p>
+<h2 id="5-aplicacion-lp2">5. Aplicación (LP2)<a class="headerlink" href="#5-aplicacion-lp2" title="Permanent link">&para;</a></h2>
+<p>El detalle completo está en el <a href="../lp2-producto/">Producto de Unidad 3</a>: componentes finales, rendimiento, caché, decisión sobre Redis, logging, auditoría, plan de pruebas y bitácora de hallazgos.</p>
+<h2 id="6-demo-final">6. Demo final<a class="headerlink" href="#6-demo-final" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Paso</th>
+<th>Rol</th>
+<th>Qué se muestra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>Estudiante</td>
+<td>Inicia sesión por Keycloak y ve su cupo del día</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>Estudiante</td>
+<td>Registra dos hábitos con foto</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>Estudiante</td>
+<td>Intenta pasarse del cupo. La pantalla ya no lo deja; con una segunda pestaña abierta antes, el servidor responde 409 y no guarda nada</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>Coordinación</td>
+<td>Valida una evidencia y rechaza otra con motivo</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>Coordinación</td>
+<td>El ranking suma solo los puntos validados</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>Coordinación</td>
+<td>Emite un acta de premiación y el stock del premio baja</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>Jefatura</td>
+<td>El reporte cambia de página y los totales no cambian</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Jefatura</td>
+<td>La auditoría muestra cada paso anterior con usuario y fecha</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>Base de datos</td>
+<td>Una consulta a <code>REGISTROS</code> y a <code>EVENTOS</code> confirma que los datos están en Oracle</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-matriz-final-de-trazabilidad">7. Matriz final de trazabilidad<a class="headerlink" href="#7-matriz-final-de-trazabilidad" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Necesidad</th>
+<th>Diseño (ADS)</th>
+<th>Base de datos (BD2)</th>
+<th>Código (LP2)</th>
+<th>Pruebas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registrar la participación</td>
+<td>Agregado <code>RegistroParticipacion</code>, secuencia de CU-04</td>
+<td><code>REGISTROS</code>, <code>DETALLE_EVIDENCIAS</code>, <code>CUPOS_DIARIOS</code></td>
+<td><code>RegistroServiceImpl.crear()</code></td>
+<td>Cupo dentro y fuera del límite, hábito ajeno a la campaña, <code>ParticipacionEndToEndTest</code></td>
+</tr>
+<tr>
+<td>Validar evidencias</td>
+<td>Diagrama de estados del registro</td>
+<td><code>ESTADO</code> y <code>MOTIVO_RECHAZO</code> en <code>DETALLE_EVIDENCIAS</code></td>
+<td><code>validar()</code> y <code>rechazar()</code></td>
+<td>Rechazo con motivo; validar un registro ya revisado</td>
+</tr>
+<tr>
+<td>Saber cuántos participan</td>
+<td>C4 contenedores</td>
+<td><code>COUNT</code>, <code>SUM</code> y <code>GROUP BY</code></td>
+<td><code>/registros/pagina</code> y <code>/registros/totales</code></td>
+<td>Totales iguales en cualquier página</td>
+</tr>
+<tr>
+<td>Premiar con datos</td>
+<td>Agregado <code>ActaPremiacion</code>, ADR-04</td>
+<td><code>ACTAS_PREMIACION</code>, <code>DETALLES_PREMIACION</code>, stock de <code>PREMIOS</code></td>
+<td><code>ActaPremiacionService.emitir()</code></td>
+<td>Acta con stock insuficiente; anular devuelve el stock</td>
+</tr>
+<tr>
+<td>Solo usuarios reales</td>
+<td>ADR-03 y ADR-08</td>
+<td><code>ESTUDIANTES</code> enlazados a Keycloak</td>
+<td><code>SecurityConfig</code>, módulo <code>cuentas</code></td>
+<td>Sin token 401; rol incorrecto 403</td>
+</tr>
+<tr>
+<td>Control de lo que pasa</td>
+<td>ADR-07</td>
+<td><code>BOM_AUDITORIA.EVENTOS</code></td>
+<td><code>AuditoriaService</code></td>
+<td>Acciones críticas registradas con actor y fecha</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-evidencia-obligatoria">8. Evidencia obligatoria<a class="headerlink" href="#8-evidencia-obligatoria" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Evidencia</th>
+<th>Dónde está</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repositorios</td>
+<td><a href="https://github.com/MGMM7STA/bomerp-backend">bomerp-backend</a> y <a href="https://github.com/MGMM7STA/bomerp-frontend">bomerp-frontend</a></td>
+</tr>
+<tr>
+<td>Documentación publicada</td>
+<td>Este sitio</td>
+</tr>
+<tr>
+<td>Demo ejecutable</td>
+<td><a href="../../../guia-ejecucion/">Guía de ejecución</a></td>
+</tr>
+<tr>
+<td>Matriz final de trazabilidad</td>
+<td>Sección 7 de esta página</td>
+</tr>
+<tr>
+<td>Pruebas y bitácora de estabilización</td>
+<td><a href="../lp2-producto/">Producto de Unidad 3</a>, secciones 3 y 4</td>
+</tr>
+<tr>
+<td>Evidencias Oracle de operación</td>
+<td>Sección 4 de esta página y <a href="../modelo-datos/">Modelo de datos</a></td>
+</tr>
+<tr>
+<td>Build optimizado, caché y decisión sobre Redis</td>
+<td><a href="../lp2-producto/">Producto de Unidad 3</a>, sección 2</td>
+</tr>
+<tr>
+<td>Logs, endpoint de salud y monitoreo</td>
+<td><a href="../lp2-producto/">Producto de Unidad 3</a>, sección 2.5</td>
+</tr>
+<tr>
+<td>Paginación, auditoría y prueba de punta a punta</td>
+<td><a href="../lp2-producto/">Producto de Unidad 3</a>, secciones 2.2, 2.6 y 3.1</td>
+</tr>
+<tr>
+<td>Guía reproducible de configuración y despliegue</td>
+<td><a href="../../../guia-ejecucion/">Guía de ejecución</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

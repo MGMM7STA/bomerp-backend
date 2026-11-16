@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Backend REST modular del proyecto Semestre Saludable UPeU - LP2 Unidad 1">
+        <meta name="description" content="Backend REST modular del proyecto Semestre Saludable UPeU - Proyecto Integrador">
       
       
         <meta name="author" content="Montalvo Machaca, Maykol Gabriel">
@@ -430,6 +430,60 @@
   
   
     <li class="md-nav__item">
+      <a href="proyecto-integrador/u3/sustentacion-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sustentacion final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="proyecto-integrador/u3/modelo-datos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelo de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="guia-ejecucion/" class="md-nav__link">
         
   
@@ -541,10 +595,11 @@
 
 
 <h1 id="semestre-saludable-upeu-backend">Semestre Saludable UPeU — Backend<a class="headerlink" href="#semestre-saludable-upeu-backend" title="Permanent link">&para;</a></h1>
-<p>Backend REST del proyecto <strong>Semestre Saludable UPeU</strong>, desarrollado para el curso de Lenguaje de Programación II de la Universidad Peruana Unión, sede Juliaca.</p>
-<p><strong>Autor:</strong> Montalvo Machaca, Maykol Gabriel — Sección g2 — Semestre 2026-2</p>
+<p>Backend REST del proyecto <strong>Semestre Saludable UPeU</strong>, Proyecto Integrador del ciclo 4 de la Universidad Peruana Unión, sede Juliaca: Análisis y Diseño de Software, Administración de Base de Datos II y Lenguaje de Programación II.</p>
+<p><strong>Equipo 01:</strong> Montalvo Machaca, Maykol Gabriel · Cruz Mendoza, Deysi — Sección g2 — Semestre 2026-2</p>
 <h2 id="que-hace-este-sistema">Qué hace este sistema<a class="headerlink" href="#que-hace-este-sistema" title="Permanent link">&para;</a></h2>
-<p>La universidad abre una campaña de hábitos saludables. Durante la campaña, cada estudiante registra evidencias diarias de lo que hizo — caminó, comió fruta, durmió bien, tomó agua — y cada evidencia suma puntaje. La campaña limita cuántas evidencias puede registrar un estudiante por día, para que el puntaje refleje constancia y no un solo día de entusiasmo.</p>
+<p>La universidad abre una campaña de hábitos saludables. Durante la campaña, cada estudiante registra evidencias diarias de lo que hizo — caminó, comió fruta, durmió bien, tomó agua — con su foto. La campaña limita cuántas evidencias puede registrar un estudiante por día, para que el puntaje refleje constancia y no un solo día de entusiasmo.</p>
+<p>La coordinación de cada sede valida o rechaza cada evidencia. Solo el puntaje validado sube al ranking y, al cierre, se emite un acta de premiación que descuenta el stock de los premios entregados. Cada acción importante queda en la auditoría.</p>
 <h2 id="como-esta-construido">Cómo está construido<a class="headerlink" href="#como-esta-construido" title="Permanent link">&para;</a></h2>
 <p>Es una sola aplicación Spring Boot organizada como <strong>monolito modular</strong>: un único ejecutable dividido internamente en módulos con fronteras verificadas automáticamente.</p>
 <table>
@@ -556,17 +611,35 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="proyecto-integrador/u1/lp2-demo/#1-alcance-arquitectonico-del-corte"><code>campanias</code></a></td>
-<td>El catálogo: qué categorías de hábito existen, qué hábitos hay en cada una, y qué campaña está vigente con su cupo diario.</td>
+<td><code>campanias</code></td>
+<td>El catálogo: categorías de hábito, hábitos, campañas por sede y el cupo diario.</td>
 </tr>
 <tr>
-<td><a href="proyecto-integrador/u1/lp2-demo/#4-dto-principales"><code>participacion</code></a></td>
-<td>La operación: el estudiante registra su participación del día con todas sus evidencias, de forma atómica.</td>
+<td><code>participacion</code></td>
+<td>La operación: el estudiante registra su participación del día con todas sus evidencias, de forma atómica; validación, reporte y ranking.</td>
+</tr>
+<tr>
+<td><code>premios</code></td>
+<td>Premios con stock y actas de premiación.</td>
+</tr>
+<tr>
+<td><code>cuentas</code></td>
+<td>Cuentas y roles en Keycloak, y solicitudes de cuenta que llegan desde Odoo.</td>
+</tr>
+<tr>
+<td><code>sedes</code></td>
+<td>La sede de cada usuario y el alcance de sus consultas.</td>
+</tr>
+<tr>
+<td><code>auditoria</code></td>
+<td>Registro inmutable de las acciones importantes.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="por-donde-empezar">Por dónde empezar<a class="headerlink" href="#por-donde-empezar" title="Permanent link">&para;</a></h2>
 <ul>
+<li><strong><a href="proyecto-integrador/u3/sustentacion-final/">Sustentación final integrada</a></strong> — el sistema visto desde los tres cursos: diseño, operación, aplicación, demo y trazabilidad.</li>
+<li><strong><a href="proyecto-integrador/u3/lp2-producto/">Producto de Unidad 3</a></strong> — componentes finales, rendimiento, caché, auditoría, pruebas y bitácora de hallazgos.</li>
 <li><strong><a href="proyecto-integrador/u1/lp2-demo/">Producto de Unidad 1</a></strong> — alcance, contrato REST, DTO, arquitectura, casos de prueba y trazabilidad.</li>
 <li><strong><a href="guia-ejecucion/">Guía de ejecución</a></strong> — cómo levantar el proyecto desde cero en otra máquina.</li>
 </ul>
@@ -598,6 +671,10 @@
 <tr>
 <td>Oracle Database</td>
 <td>23ai Free (Docker)</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td>26 (Docker), con PostgreSQL 17</td>
 </tr>
 <tr>
 <td>MapStruct</td>

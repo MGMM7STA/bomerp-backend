@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Backend REST modular del proyecto Semestre Saludable UPeU - LP2 Unidad 1">
+        <meta name="description" content="Backend REST modular del proyecto Semestre Saludable UPeU - Proyecto Integrador">
       
       
         <meta name="author" content="Montalvo Machaca, Maykol Gabriel">
@@ -16,7 +16,7 @@
         <link rel="prev" href="../../u1/lp2-demo/">
       
       
-        <link rel="next" href="../../../guia-ejecucion/">
+        <link rel="next" href="../sustentacion-final/">
       
       
         
@@ -571,6 +571,60 @@
   
   
     <li class="md-nav__item">
+      <a href="../sustentacion-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sustentacion final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelo-datos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelo de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../guia-ejecucion/" class="md-nav__link">
         
   
@@ -937,7 +991,7 @@
 <h3 id="25-logging-actuator-y-configuracion-de-produccion">2.5 Logging, Actuator y configuración de producción<a class="headerlink" href="#25-logging-actuator-y-configuracion-de-produccion" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>logback-spring.xml</code>: <code>pe.edu.upeu.bomerp</code> en <code>DEBUG</code> con el perfil <code>dev</code> y en <code>INFO</code> con <code>prod</code>; Hibernate en <code>WARN</code> en <code>prod</code>.</li>
-<li>Actuator: <code>dev</code> expone todo; <code>prod</code> solo <code>health,info</code>, y además la seguridad JWT rechaza cualquier petición sin token.</li>
+<li>Actuator: <code>dev</code> expone todo; <code>prod</code> solo <code>health,info</code>. Esos dos son públicos para que Docker o un balanceador revisen la salud sin token; cualquier otro endpoint pide JWT.</li>
 <li><code>application-prod.yml</code> y <code>compose.yml</code> leen conexiones, usuarios, contraseñas y el secreto del cliente de Keycloak desde variables de entorno. <code>.env.example</code> documenta los nombres sin valores; el <code>.env</code> real está en <code>.gitignore</code>.</li>
 <li><code>environment.prod.ts</code> reemplaza a <code>environment.ts</code> en el build de producción por <code>fileReplacements</code>.</li>
 </ul>
@@ -1097,6 +1151,31 @@
 <td>08/11/2026</td>
 <td>El panel de coordinación muestra un 404 en consola cuando la sede no tiene campaña activa.</td>
 <td>Es la respuesta esperada; el frontend la maneja mostrando "sin campaña activa"</td>
+</tr>
+<tr>
+<td>16/11/2026</td>
+<td><code>PremioController</code> declaraba dentro de sí una interfaz <code>PremioRepository</code> que nadie usaba.</td>
+<td>Se eliminó; el repositorio real sigue en <code>premio/repository</code></td>
+</tr>
+<tr>
+<td>16/11/2026</td>
+<td>Pedir un premio inexistente respondía 500 porque el servicio lanzaba <code>RuntimeException</code>.</td>
+<td>Ahora responde 404</td>
+</tr>
+<tr>
+<td>16/11/2026</td>
+<td>Eliminar un premio que ya estaba en un acta dejaba el acta apuntando a un premio que ya no existe.</td>
+<td>El servicio lo impide con 409 y <code>S20</code> agrega <code>FK_DETALLE_PREMIO</code> en la base</td>
+</tr>
+<tr>
+<td>16/11/2026</td>
+<td><code>REGISTROS.ID_ESTUDIANTE</code> y <code>DETALLES_PREMIACION.PREMIO_ID</code> estaban en el mismo esquema que su tabla de destino pero sin llave foránea.</td>
+<td><code>S20_integridad_referencial.sql</code> agrega las dos llaves y los índices de las columnas usadas en búsquedas</td>
+</tr>
+<tr>
+<td>16/11/2026</td>
+<td><code>ProductoControllerTest</code> (ejemplo del docente, con <code>@WebMvcTest</code>) no levantaba desde que se agregó Keycloak: la configuración automática del servidor de recursos OAuth2 pedía <code>HttpSecurity</code> dentro de la prueba de solo controlador.</td>
+<td>La prueba excluye esa configuración; los 4 casos vuelven a pasar</td>
 </tr>
 </tbody>
 </table>
